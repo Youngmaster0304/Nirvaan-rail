@@ -42,6 +42,6 @@ htmlcov/
 # Logs
 *.log
 
-# Model artifacts (regenerated on startup)
-backend/app/ml/model.pkl
+# Model artifacts ship with the repo — Render has no persistence and training
+# at boot blocks uvicorn's port bind (deploy fails the port scan).
 backend/app/ml/__pycache__/
