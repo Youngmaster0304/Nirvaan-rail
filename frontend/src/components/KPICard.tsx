@@ -5,6 +5,8 @@ import { cn } from '../lib/utils';
 
 interface KPICardProps {
   label: string;
+  /** Hindi label shown under the English one (bilingual console). */
+  labelHi?: string;
   value: string | number;
   unit?: string;
   trend?: 'up' | 'down' | 'stable';
@@ -24,6 +26,7 @@ const TREND_COLOR: Record<NonNullable<KPICardProps['trend']>, string> = {
 
 export const KPICard: React.FC<KPICardProps> = ({
   label,
+  labelHi,
   value,
   unit,
   trend,
@@ -37,7 +40,14 @@ export const KPICard: React.FC<KPICardProps> = ({
   return (
     <section className="m-card p-3.5 flex flex-col gap-2 min-w-0" aria-label={label}>
       <div className="flex items-start justify-between gap-2">
-        <h2 className="section-label">{label}</h2>
+        <div className="min-w-0">
+          <h2 className="section-label">{label}</h2>
+          {labelHi && (
+            <div className="text-[10.5px] leading-tight text-ink-muted mt-0.5" lang="hi">
+              {labelHi}
+            </div>
+          )}
+        </div>
         {icon && (
           <span className="text-ink-muted/70 shrink-0" aria-hidden="true">
             {icon}

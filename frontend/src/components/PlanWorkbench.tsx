@@ -115,8 +115,13 @@ export const PlanWorkbench: FC<PlanWorkbenchProps> = ({
               horizon_days: days,
               corridor_id: corridorId || undefined,
             });
+      const lineage = res.based_on
+        ? ` Built on ${res.based_on} — ${res.carried_over_tasks ?? 0} task${
+            (res.carried_over_tasks ?? 0) === 1 ? '' : 's'
+          } carried forward.`
+        : ' No previous programme for this horizon — generated from live tasks only.';
       setNotice(
-        `Generated ${res.plan_id} — ${res.total_blocks} blocks, ${res.total_tasks_scheduled} tasks, impact ${res.estimated_impact}.`,
+        `Generated ${res.plan_id} — ${res.total_blocks} blocks, ${res.total_tasks_scheduled} tasks, impact ${res.estimated_impact}.${lineage}`,
       );
       setSelectedPlanId(res.plan_id);
       loadPlans();
@@ -312,6 +317,12 @@ export const PlanWorkbench: FC<PlanWorkbenchProps> = ({
             the detail panel.
           </span>
         </div>
+        <p className="sys-meta mt-2 border-t border-hairline pt-2">
+          Builds on:{' '}
+          {plans[0]
+            ? `${plans[0].plan_id} · ${plans[0].total_tasks_scheduled} tasks from that programme are carried forward when still pending`
+            : 'no previous programme — first run for this horizon'}
+        </p>
       </div>
 
       {/* plan list */}

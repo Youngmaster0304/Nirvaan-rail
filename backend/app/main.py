@@ -10,7 +10,7 @@ from app.data.seed import seed_if_empty
 from app.ml.model_manager import ensure_model_exists
 from app.models import MaintenanceTask
 from app.optimization.corridor_graph import CorridorGraph
-from app.routers import auth, tasks, prioritize, optimize, simulate, audit, corridors, reports, chat, gov
+from app.routers import auth, tasks, prioritize, optimize, simulate, audit, corridors, reports, chat, gov, recommendations
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,6 +40,7 @@ app.include_router(corridors.router)
 app.include_router(reports.router)
 app.include_router(chat.router)
 app.include_router(gov.router)
+app.include_router(recommendations.router)
 
 
 @app.on_event("startup")

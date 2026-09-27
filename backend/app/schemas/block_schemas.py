@@ -54,6 +54,7 @@ class PlanRequest(BaseModel):
     start_date: Optional[date] = Field(None, description="First day of the planning window (defaults to today)")
     horizon_days: Optional[int] = Field(None, description="Length of the planning window in days")
     corridor_id: Optional[str] = Field(None, description="Restrict planning to one corridor")
+    base_plan_id: Optional[str] = Field(None, description="Plan to build on; defaults to the most recent plan of the same type")
     week_number: Optional[int] = Field(None, description="Legacy: ISO week number")
     year: Optional[int] = Field(None, description="Legacy: year")
 
@@ -71,6 +72,8 @@ class WeeklyPlanResponse(BaseModel):
     estimated_impact: str
     window: PlanWindow
     degraded: bool = False
+    based_on: Optional[str] = Field(None, description="Plan this run was built on, if one exists")
+    carried_over_tasks: int = Field(0, description="Outstanding tasks rolled forward from that plan")
     model_version: str = "v2.1"
 
 class MonthlyPlanResponse(WeeklyPlanResponse):

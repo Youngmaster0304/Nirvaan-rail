@@ -18,6 +18,8 @@ import type {
   PlanListResponse,
   PrioritizeResponse,
   PrioritizeResultsResponse,
+  RecommendationDecisionResponse,
+  RecommendationListResponse,
   ReportResponse,
   ShapExplanationResponse,
   SimulationResult,
@@ -199,6 +201,16 @@ export const reportsApi = {
     call<ReportResponse>(apiClient.post('/reports/generate', prune({ type, plan_id }))),
 };
 
+/* ---------------- AI recommendations ---------------- */
+
+export const recommendationsApi = {
+  list: () => call<RecommendationListResponse>(apiClient.get('/recommendations')),
+  decide: (id: string, action: 'APPROVE' | 'DISMISS', reason?: string) =>
+    call<RecommendationDecisionResponse>(
+      apiClient.post(`/recommendations/${encodeURIComponent(id)}/decision`, prune({ action, reason })),
+    ),
+};
+
 /* ---------------- chatbot ---------------- */
 
 export const chatApi = {
@@ -233,6 +245,7 @@ export const api = {
   corridors: corridorsApi,
   reports: reportsApi,
   chat: chatApi,
+  recommendations: recommendationsApi,
   gov: govApi,
   health: healthApi,
 };

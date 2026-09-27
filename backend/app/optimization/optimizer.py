@@ -75,9 +75,16 @@ class BlockOptimizer:
         ) if ok else []
 
         scheduled_ids = {task_id for block in blocks for task_id in block["tasks"]}
+        # blocks[].tasks carries maintenance task ids, so a job counts as
+        # unscheduled only when none of its tasks made it into a block.
+        unscheduled_jobs = [
+            t["id"] for t in tasks
+            if t["id"] not in scheduled_ids
+            and not any(tid in scheduled_ids for tid in (t.get("task_ids") or []))
+        ]
         return OptimizationResult(
             blocks=blocks,
-            unscheduled_tasks=[t["id"] for t in tasks if t["id"] not in scheduled_ids],
+            unscheduled_tasks=unscheduled_jobs,
             statistics={
                 "status": solver.StatusName(status),
                 "objective": solver.ObjectiveValue() if ok else 0,

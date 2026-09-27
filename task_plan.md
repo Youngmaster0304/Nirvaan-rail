@@ -213,3 +213,38 @@ Auth: `Authorization: Bearer <token>`.
 - No i18n rewrite (Hindi labels ship as static nav labels only).
 - No Postgres migration (SQLite is fine for the demo; note it in README).
 - No removal of `venv/` (would break the running environment).
+
+---
+
+## 7. Phase R — AI feature parity + plan continuity (post-deploy request)
+
+User request: (a) apply the AI features shown in the reference frontend, (b) weekly/monthly
+generation must build on the **previous plan**. P0 = must ship, P1 = if time allows.
+
+| ID | Action | Where | Status |
+|---|---|---|---|
+| R1 | `generate_plan()` resolves the latest same-type plan as base, unions its task ids into the job set (carry-forward), returns `based_on` + `carried_over_tasks` | `backend/app/services/planning_service.py` | done — `WEEK-2026-W39-R6 based_on=R5 carried=60` |
+| R2 | Add `base_plan_id` to `PlanRequest`; add `based_on`, `carried_over_tasks` to `WeeklyPlanResponse`; pass through + audit it | `backend/app/schemas/block_schemas.py`, `backend/app/routers/optimize.py` | done |
+| R3 | New `GET /api/recommendations` (merge / defer / alert / optimize derived from live DB rows) + `POST /api/recommendations/{id}/decision` writing the audit trail; decisions read back from audit | `backend/app/routers/recommendations.py`, `main.py` | done — approve → next GET shows APPROVED |
+| R4 | Dashboard: **Run AI Analysis** header button → `POST /api/prioritize`, busy state, result notice, data refresh | `frontend/src/pages/DashboardPage.tsx` | done — "500 tasks scored · model v2.1" |
+| R5 | Dashboard: **AI Recommendations** LIVE panel (status chip, rationale, savings, ref, APPROVE/DISMISS) | `frontend/src/components/AiRecommendations.tsx` + dashboard | done — UI approve → APPROVED stamp |
+| R6 | KPI cards: bilingual EN/हिं labels, real Δ vs previous day from `kpiHistory`, `DATA SYNCED HH:MM:SS IST` | `frontend/src/pages/DashboardPage.tsx` | done — e.g. `-2 VS PREV DAY` |
+| R7 | Plan workbench: show which previous plan a new run builds on + carried-forward count in the notice | `frontend/src/components/PlanWorkbench.tsx` | done — "Builds on: …-R6 · 60 tasks carried forward" |
+| R8 | Corridor register: derived STATUS column (≥85 healthy / ≥70 fair / ≥60 degraded / <60 critical); stats strip: pending approvals, maintenance efficiency, open critical defects | `frontend/src/pages/DashboardPage.tsx` | done — deviation: efficiency delta is vs 14-day mean (`kpiHistory` only holds 14 days), not "last month" |
+
+Bugs found and fixed during Phase R:
+- `optimizer.py` compared **job ids** against `blocks[].tasks` (**maintenance task ids**), so every
+  job was reported unscheduled and the impact string always claimed "N jobs deferred" while all
+  tasks were scheduled. Now a job counts as unscheduled only when none of its tasks are in a block;
+  impact reads `60 tasks in 57 blocks (6 merged) · ~3.6 h downtime saved`.
+- `DashboardPage` load effect set `mounted = false` on cleanup but never reset it, so the
+  StrictMode remount dropped every response and the board stayed in `loading` (KPI `…`, buttons
+  disabled). Effect now re-arms `mounted` on mount.
+
+Rules carried over from §1: no fabricated numbers — every figure above comes from an API
+field or is computed from API fields; `TRAIN RUNS TODAY` is not shown because
+`/api/gov/railway-live` returns no train counts (P2, skipped).
+
+Verification (2026-09-27): `pytest` 25 passed · `tsc --noEmit` clean · `npm run build` ok ·
+Playwright `verify3.js` 13 PASS / 0 FAIL, `PAGE_ERRORS=0` (dashboard, Run AI Analysis, recommendation
+approve end-to-end, weekly Builds-on line).

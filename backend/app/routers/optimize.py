@@ -45,11 +45,19 @@ async def generate_weekly_plan(
     """Runs weekly planner (merge -> OR-Tools CP-SAT -> persist BlockPlan rows)."""
     start = _start_date(request)
     horizon = request.horizon_days or 7
-    plan = await planning_service.generate_plan(db, "WEEKLY", start, horizon, request.corridor_id)
+    plan = await planning_service.generate_plan(
+        db, "WEEKLY", start, horizon, request.corridor_id, base_plan_id=request.base_plan_id
+    )
 
     await audit_service.log_action(
         db, current_user.employee_id, current_user.name, "GENERATE_WEEKLY_PLAN", "Plan", plan["plan_id"],
-        {"start_date": start.isoformat(), "horizon_days": horizon, "blocks": plan["total_blocks"]},
+        {
+            "start_date": start.isoformat(),
+            "horizon_days": horizon,
+            "blocks": plan["total_blocks"],
+            "based_on": plan["based_on"],
+            "carried_over_tasks": plan["carried_over_tasks"],
+        },
     )
 
     return WeeklyPlanResponse(
@@ -60,6 +68,8 @@ async def generate_weekly_plan(
         estimated_impact=plan["estimated_impact"],
         window=_window(plan["window"]),
         degraded=plan["degraded"],
+        based_on=plan["based_on"],
+        carried_over_tasks=plan["carried_over_tasks"],
     )
 
 
@@ -72,11 +82,19 @@ async def generate_monthly_plan(
     """Runs monthly planner (merge -> OR-Tools CP-SAT -> persist BlockPlan rows)."""
     start = _start_date(request)
     horizon = request.horizon_days or 30
-    plan = await planning_service.generate_plan(db, "MONTHLY", start, horizon, request.corridor_id)
+    plan = await planning_service.generate_plan(
+        db, "MONTHLY", start, horizon, request.corridor_id, base_plan_id=request.base_plan_id
+    )
 
     await audit_service.log_action(
         db, current_user.employee_id, current_user.name, "GENERATE_MONTHLY_PLAN", "Plan", plan["plan_id"],
-        {"start_date": start.isoformat(), "horizon_days": horizon, "blocks": plan["total_blocks"]},
+        {
+            "start_date": start.isoformat(),
+            "horizon_days": horizon,
+            "blocks": plan["total_blocks"],
+            "based_on": plan["based_on"],
+            "carried_over_tasks": plan["carried_over_tasks"],
+        },
     )
 
     return MonthlyPlanResponse(
@@ -87,6 +105,8 @@ async def generate_monthly_plan(
         estimated_impact=plan["estimated_impact"],
         window=_window(plan["window"]),
         degraded=plan["degraded"],
+        based_on=plan["based_on"],
+        carried_over_tasks=plan["carried_over_tasks"],
     )
 
 

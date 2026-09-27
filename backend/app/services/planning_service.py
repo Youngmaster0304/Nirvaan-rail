@@ -256,19 +256,69 @@ def _block_summary(plan_id: str, index: int, block: Dict[str, Any]) -> Dict[str,
     }
 
 
+async def _base_plan_rows(
+    db: AsyncSession,
+    plan_type: str,
+    base_plan_id: Optional[str] = None,
+) -> List[BlockPlan]:
+    """Rows of the plan a new run should build on: the newest plan of the same
+    type (or an explicitly requested one)."""
+    rows = await list_plan_rows(db, plan_type)
+    if not rows:
+        return []
+    plans = group_plans(rows)
+    if not plans:
+        return []
+    if base_plan_id:
+        chosen = next((p for p in plans if p["plan_id"] == base_plan_id), None)
+    else:
+        chosen = plans[0]
+    if not chosen:
+        return []
+    return [r for r in rows if r.plan_id == chosen["plan_id"]]
+
+
 async def generate_plan(
     db: AsyncSession,
     plan_type: str,
     start_date: datetime.date,
     horizon_days: int,
     corridor_id: Optional[str] = None,
+    base_plan_id: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Runs merger + OR-Tools planner and persists the resulting BlockPlan rows."""
+    """Runs merger + OR-Tools planner and persists the resulting BlockPlan rows.
+
+    The run builds on the previous plan of the same type: every task that plan
+    still carries is pulled into this job set first, so a new weekly or monthly
+    programme rolls the outstanding work forward instead of restarting cold.
+    """
     window_start = datetime.datetime.combine(start_date, datetime.time(0, 0))
     window_end_date = start_date + datetime.timedelta(days=horizon_days)
     limit = PLAN_LIMITS.get(plan_type, 60)
 
+    base_rows = await _base_plan_rows(db, plan_type, base_plan_id)
+    base_plan_ref = base_rows[0].plan_id if base_rows else None
+    base_task_ids = list(dict.fromkeys(
+        task_id for row in base_rows for task_id in (row.merged_task_ids or [])
+    ))
+
     tasks = await load_planning_tasks(db, window_end_date, corridor_id, limit)
+    if base_task_ids:
+        known = {t.task_id for t in tasks}
+        carried_ids = [tid for tid in base_task_ids if tid not in known]
+        if carried_ids:
+            carried = list((await db.execute(
+                select(MaintenanceTask)
+                .where(MaintenanceTask.task_id.in_(carried_ids))
+                .where(MaintenanceTask.status.in_(SCHEDULABLE_STATUSES))
+                .order_by(MaintenanceTask.priority_score.desc().nulls_last())
+            )).scalars().all())
+            if carried:
+                logger.info(
+                    "Plan %s carries %d outstanding task(s) forward from %s",
+                    plan_type, len(carried), base_plan_ref,
+                )
+                tasks = carried + tasks[: max(0, limit - len(carried))]
     await score_and_persist(db, tasks, force=False)
 
     graph = CorridorGraph()
@@ -348,6 +398,8 @@ async def generate_plan(
     return {
         "plan_id": plan_id,
         "plan_type": plan_type,
+        "based_on": base_plan_ref,
+        "carried_over_tasks": len(set(base_task_ids) & scheduled_task_ids),
         "blocks": [_block_summary(plan_id, i, b) for i, b in enumerate(placed, start=1)],
         "total_blocks": len(placed),
         "total_tasks_scheduled": len(scheduled_task_ids),

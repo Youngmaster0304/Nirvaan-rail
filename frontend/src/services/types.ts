@@ -129,10 +129,41 @@ export interface WeeklyPlanResponse {
   estimated_impact: string;
   window: PlanWindow;
   degraded?: boolean;
+  based_on?: string | null;
+  carried_over_tasks?: number;
   model_version?: string;
 }
 
 export type MonthlyPlanResponse = WeeklyPlanResponse;
+
+/* ---------------- AI recommendations ---------------- */
+
+export interface Recommendation {
+  id: string;
+  kind: 'MERGE' | 'DEFER' | 'ALERT' | 'OPT';
+  title: string;
+  detail: string;
+  status: string;
+  ref: string;
+  savings_label: string;
+  savings_hours: number;
+  issued_at: string;
+  actionable: boolean;
+  source: string;
+}
+
+export interface RecommendationListResponse {
+  items: Recommendation[];
+  generated_at: string;
+  model_version?: string;
+}
+
+export interface RecommendationDecisionResponse {
+  id: string;
+  status: string;
+  audit_id: string;
+  message: string;
+}
 
 export interface PlanListItem {
   plan_id: string;

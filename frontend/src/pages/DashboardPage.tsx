@@ -1,16 +1,46 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckSquare, CalendarClock, AlertTriangle, Clock, Gauge, TrendingUp } from 'lucide-react';
+import { CheckSquare, CalendarClock, AlertTriangle, Clock, Gauge, TrendingUp, Sparkles } from 'lucide-react';
 import { KPICard } from '../components/KPICard';
 import { DataTable, type Column } from '../components/DataTable';
 import { WarningBanner } from '../components/WarningBanner';
 import { AuditLogEntry } from '../components/AuditLogEntry';
 import { StatusBadge } from '../components/StatusBadge';
+import { AiRecommendations } from '../components/AiRecommendations';
 import { api, apiErrorMessage } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import type { AuditEntry, CorridorKPI, PlanListItem, TaskItem } from '../services/types';
 
 const pct = (v: number | null | undefined) => (v == null || Number.isNaN(v) ? '—' : `${Math.round(v)}%`);
+
+const istStamp = () =>
+  `${new Date().toLocaleTimeString('en-GB', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })} IST`;
+
+/** Day-over-day delta from a daily average series (asc). Empty when <2 days. */
+const deltaProps = (series: number[], suffix: string) => {
+  if (series.length < 2) return {};
+  const delta = Math.round(series[series.length - 1] - series[series.length - 2]);
+  if (Number.isNaN(delta)) return {};
+  return {
+    trend: (delta > 1 ? 'up' : delta < -1 ? 'down' : 'stable') as 'up' | 'down' | 'stable',
+    trendValue: `${delta > 0 ? '+' : ''}${delta} vs ${suffix}`,
+  };
+};
+
+/** Register status from composite score — same bands as the reference register. */
+const corridorStatus = (score: number) =>
+  score >= 85
+    ? { label: 'HEALTHY', cls: 'stamp approved' }
+    : score >= 70
+      ? { label: 'FAIR', cls: 'stamp pending' }
+      : score >= 60
+        ? { label: 'DEGRADED', cls: 'stamp medium' }
+        : { label: 'CRITICAL', cls: 'stamp critical' };
 
 function todayKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -37,10 +67,19 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
-
-  /* ---- initial load -------------------------------------------------- */
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisNotice, setAnalysisNotice] = useState('');
+  const [syncedAt, setSyncedAt] = useState('');
+  const mounted = useRef(true);
   useEffect(() => {
-    let cancelled = false;
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  /* ---- data load (also reused after Run AI Analysis) ------------------ */
+  const load = useCallback(() => {
     setLoading(true);
     setError('');
 
@@ -54,7 +93,7 @@ export default function DashboardPage() {
       api.health.get(),
     ])
       .then(([pendingRes, criticalRes, kpiRes, histRes, planRes, auditRes, health]) => {
-        if (cancelled) return;
+        if (!mounted.current) return;
         setPending(pendingRes.items ?? []);
         setPendingTotal(pendingRes.total ?? 0);
         setCriticalTotal(criticalRes.total ?? 0);
@@ -63,20 +102,37 @@ export default function DashboardPage() {
         setPlans(planRes.items ?? planRes.plans ?? []);
         setActivity(auditRes.items ?? auditRes.entries ?? []);
         setApiOk(health.status === 'ok' || health.status === 'healthy');
+        setSyncedAt(istStamp());
       })
       .catch((err) => {
-        if (cancelled) return;
+        if (!mounted.current) return;
         setApiOk(false);
         setError(apiErrorMessage(err, 'The console could not reach the planning API.'));
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (mounted.current) setLoading(false);
       });
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
+
+  useEffect(load, [load]);
+
+  /* ---- Run AI Analysis (R4): score every pending task, refresh board -- */
+  const runAnalysis = async () => {
+    setAnalyzing(true);
+    setError('');
+    setAnalysisNotice('');
+    try {
+      const res = await api.prioritize.run();
+      setAnalysisNotice(
+        `AI analysis complete — ${res.total_count} tasks scored · model ${res.model_version} · ${res.timestamp}`,
+      );
+      load();
+    } catch (err) {
+      setError(apiErrorMessage(err, 'AI analysis could not be run.'));
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   /* ---- blocks scheduled for today ------------------------------------ */
   const covering = useMemo(() => {
@@ -152,6 +208,16 @@ export default function DashboardPage() {
       .map(([, vals]) => Math.round(vals.reduce((s, v) => s + v, 0) / vals.length));
   }, [kpiHistory]);
 
+  /* ---- stats strip (all derived from rows already loaded) ------------- */
+  const awaitingApproval = plans.filter(
+    (p) => !String(p.status ?? '').toUpperCase().includes('APPROVED'),
+  ).length;
+  const productivity14dMean = productivitySpark.length
+    ? Math.round(productivitySpark.reduce((s, v) => s + v, 0) / productivitySpark.length)
+    : null;
+  const efficiencyDelta =
+    productivity14dMean !== null && productivity !== null ? productivity - productivity14dMean : null;
+
   /* ---- alerts --------------------------------------------------------- */
   const alerts: Alert[] = useMemo(() => {
     const out: Alert[] = [];
@@ -187,7 +253,8 @@ export default function DashboardPage() {
   }, [apiOk, criticalTotal, kpis, plans]);
 
   /* ---- corridor table -------------------------------------------------- */
-  const corridorColumns: Column<CorridorKPI & { id: string }>[] = useMemo(
+  type CorridorRow = CorridorKPI & { id: string; status: string };
+  const corridorColumns: Column<CorridorRow>[] = useMemo(
     () => [
       { key: 'name', name: 'Corridor / गलियारा', sortable: true },
       {
@@ -229,12 +296,22 @@ export default function DashboardPage() {
           return <span className={cls}>{Math.round(val)}%</span>;
         },
       },
+      {
+        key: 'status',
+        name: 'Status',
+        render: (r) => <span className={corridorStatus(r.composite_score ?? 0).cls}>{r.status}</span>,
+      },
     ],
     [],
   );
 
   const corridorRows = useMemo(
-    () => kpis.map((k) => ({ ...k, id: k.corridor_id })),
+    () =>
+      kpis.map((k) => ({
+        ...k,
+        id: k.corridor_id,
+        status: corridorStatus(k.composite_score ?? 0).label,
+      })),
     [kpis],
   );
 
@@ -270,6 +347,7 @@ export default function DashboardPage() {
           <p className="sys-meta mt-1">
             {user?.division ? `${user.division} Division` : 'Division'} · {user?.zone ?? 'Zone'} ·{' '}
             {dateLabel}
+            {syncedAt && <> · DATA SYNCED {syncedAt}</>}
           </p>
         </div>
 
@@ -277,6 +355,10 @@ export default function DashboardPage() {
           <span className={apiOk === null ? 'stamp neutral' : apiOk ? 'stamp approved' : 'stamp critical'}>
             {apiOk === null ? 'CHECKING API' : apiOk ? 'ALL SYSTEMS OPERATIONAL' : 'API OFFLINE'}
           </span>
+          <button type="button" className="m-btn" onClick={runAnalysis} disabled={analyzing || loading}>
+            <Sparkles size={13} aria-hidden="true" />
+            {analyzing ? 'Analysing…' : 'Run AI Analysis'}
+          </button>
           <button type="button" className="m-btn" onClick={generateWeekly} disabled={generating}>
             <CalendarClock size={13} aria-hidden="true" />
             {generating ? 'Generating…' : 'Generate Weekly Plan'}
@@ -296,41 +378,50 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {analysisNotice && (
+        <div className="mb-3">
+          <WarningBanner type="success" message={analysisNotice} />
+        </div>
+      )}
+
       {/* 5 KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mb-4">
         <KPICard
           label="Total Pending Tasks"
+          labelHi="कुल लंबित कार्य"
           value={loading ? '…' : (pendingTotal ?? '—')}
           icon={<CheckSquare size={14} />}
           source="/tasks?status=PENDING"
         />
         <KPICard
           label="Overdue Tasks"
+          labelHi="अतिदेय कार्य"
           value={loading ? '…' : overdueCount === null ? '—' : overdueCount}
           icon={<Clock size={14} />}
           source={overdueKnown ? 'days_overdue > 0' : 'days_overdue not in /tasks payload'}
         />
         <KPICard
           label="Today's Blocks"
+          labelHi="आज के ब्लॉक"
           value={loading ? '…' : todayBlocks === null ? '—' : todayBlocks}
           icon={<CalendarClock size={14} />}
           source="/optimize/plans · today"
         />
         <KPICard
           label="Corridor Health Index"
+          labelHi="गलियारा स्वास्थ्य सूचकांक"
           value={loading ? '…' : healthIndex === null ? '—' : `${healthIndex}%`}
           unit={healthIndex === null ? undefined : 'avg'}
-          trend={healthIndex == null ? undefined : healthIndex >= 75 ? 'up' : healthIndex >= 60 ? 'stable' : 'down'}
-          trendValue={healthIndex == null ? undefined : 'vs 60% threshold'}
+          {...deltaProps(compositeSpark, 'prev day')}
           spark={compositeSpark}
           icon={<TrendingUp size={14} />}
           source="mean composite /corridors/kpis"
         />
         <KPICard
           label="Block Productivity"
+          labelHi="ब्लॉक उत्पादकता"
           value={loading ? '…' : productivity === null ? '—' : `${productivity}%`}
-          trend={productivity == null ? undefined : productivity >= 70 ? 'up' : productivity >= 55 ? 'stable' : 'down'}
-          trendValue={productivity == null ? undefined : 'vs 70% target'}
+          {...deltaProps(productivitySpark, 'prev day')}
           spark={productivitySpark}
           icon={<Gauge size={14} />}
           source="mean productivity /corridors/kpis"
@@ -356,6 +447,46 @@ export default function DashboardPage() {
             data={corridorRows}
             emptyMessage={loading ? 'Loading corridor KPIs…' : 'No corridor KPI rows returned'}
           />
+        </div>
+      </section>
+
+      {/* AI recommendations — derived live from tasks / KPIs / plans */}
+      <AiRecommendations onDecision={load} />
+
+      {/* Live dispatch summary — every figure below derived from rows above */}
+      <section className="m-card mb-4 overflow-hidden" aria-labelledby="dispatch-summary-title">
+        <div className="px-4 py-2.5 border-b border-hairline-strong">
+          <h2 id="dispatch-summary-title" className="text-[13.5px]">
+            Live Dispatch Summary
+          </h2>
+          <span className="sys-meta">/optimize/plans · /corridors/kpis · /tasks</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-hairline">
+          <div className="px-4 py-3">
+            <div className="section-label">Pending Approvals</div>
+            <div className="mono text-[22px] font-bold leading-none mt-1.5 tabular-nums text-ink">
+              {loading ? '…' : awaitingApproval}
+            </div>
+            <div className="sys-meta mt-1">plans awaiting dispatcher decision</div>
+          </div>
+          <div className="px-4 py-3">
+            <div className="section-label">Maintenance Efficiency</div>
+            <div className="mono text-[22px] font-bold leading-none mt-1.5 tabular-nums text-ink">
+              {loading || productivity === null ? '…' : `${productivity}%`}
+            </div>
+            <div className="sys-meta mt-1">
+              {efficiencyDelta === null
+                ? 'mean block productivity · /corridors/kpis'
+                : `${efficiencyDelta > 0 ? '+' : ''}${efficiencyDelta} vs 14-day mean`}
+            </div>
+          </div>
+          <div className="px-4 py-3">
+            <div className="section-label">Open Critical Defects</div>
+            <div className="mono text-[22px] font-bold leading-none mt-1.5 tabular-nums text-ink">
+              {loading || criticalTotal === null ? '…' : criticalTotal}
+            </div>
+            <div className="sys-meta mt-1">severity=Critical · status=PENDING</div>
+          </div>
         </div>
       </section>
 
