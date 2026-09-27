@@ -1,0 +1,284 @@
+[
+  {
+    "corridor_id": "CORR-1",
+    "corridor_name": "Delhi-Howrah Main Line",
+    "sections": [
+      {
+        "section_id": "SEC-1-1",
+        "from_code": "NDLS",
+        "from_name": "New Delhi",
+        "to_code": "CNB",
+        "to_name": "Kanpur Central",
+        "distance_km": 440,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-2",
+        "from_code": "CNB",
+        "from_name": "Kanpur Central",
+        "to_code": "PRYJ",
+        "to_name": "Prayagraj Junction",
+        "distance_km": 194,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-3",
+        "from_code": "PRYJ",
+        "from_name": "Prayagraj Junction",
+        "to_code": "DDU",
+        "to_name": "Pt. DD Upadhyaya Junction",
+        "distance_km": 152,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-4",
+        "from_code": "DDU",
+        "from_name": "Pt. DD Upadhyaya Junction",
+        "to_code": "GAYA",
+        "to_name": "Gaya Junction",
+        "distance_km": 205,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-5",
+        "from_code": "GAYA",
+        "from_name": "Gaya Junction",
+        "to_code": "DHN",
+        "to_name": "Dhanbad Junction",
+        "distance_km": 200,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-6",
+        "from_code": "DHN",
+        "from_name": "Dhanbad Junction",
+        "to_code": "ASN",
+        "to_name": "Asansol Junction",
+        "distance_km": 58,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-7",
+        "from_code": "ASN",
+        "from_name": "Asansol Junction",
+        "to_code": "BWN",
+        "to_name": "Barddhaman Junction",
+        "distance_km": 106,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-1-8",
+        "from_code": "BWN",
+        "from_name": "Barddhaman Junction",
+        "to_code": "HWH",
+        "to_name": "Howrah Junction",
+        "distance_km": 94,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      }
+    ]
+  },
+  {
+    "corridor_id": "CORR-2",
+    "corridor_name": "Mumbai-Chennai Grand Trunk",
+    "sections": [
+      {
+        "section_id": "SEC-2-1",
+        "from_code": "CSMT",
+        "from_name": "Chhatrapati Shivaji Maharaj Terminus",
+        "to_code": "PUNE",
+        "to_name": "Pune Junction",
+        "distance_km": 190,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-2",
+        "from_code": "PUNE",
+        "from_name": "Pune Junction",
+        "to_code": "SUR",
+        "to_name": "Solapur",
+        "distance_km": 262,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-3",
+        "from_code": "SUR",
+        "from_name": "Solapur",
+        "to_code": "KLBG",
+        "to_name": "Kalaburagi Junction",
+        "distance_km": 113,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-4",
+        "from_code": "KLBG",
+        "from_name": "Kalaburagi Junction",
+        "to_code": "RC",
+        "to_name": "Raichur Junction",
+        "distance_km": 144,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-5",
+        "from_code": "RC",
+        "from_name": "Raichur Junction",
+        "to_code": "GTL",
+        "to_name": "Guntakal Junction",
+        "distance_km": 121,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-6",
+        "from_code": "GTL",
+        "from_name": "Guntakal Junction",
+        "to_code": "RU",
+        "to_name": "Renigunta Junction",
+        "distance_km": 310,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-7",
+        "from_code": "RU",
+        "from_name": "Renigunta Junction",
+        "to_code": "AJJ",
+        "to_name": "Arakkonam Junction",
+        "distance_km": 68,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-2-8",
+        "from_code": "AJJ",
+        "from_name": "Arakkonam Junction",
+        "to_code": "MAS",
+        "to_name": "Chennai Central",
+        "distance_km": 68,
+        "section_type": "TRUNK",
+        "max_speed": 110,
+        "num_tracks": 2
+      }
+    ]
+  },
+  {
+    "corridor_id": "CORR-3",
+    "corridor_name": "Delhi-Mumbai Western Corridor",
+    "sections": [
+      {
+        "section_id": "SEC-3-1",
+        "from_code": "NDLS",
+        "from_name": "New Delhi",
+        "to_code": "MTJ",
+        "to_name": "Mathura Junction",
+        "distance_km": 141,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-2",
+        "from_code": "MTJ",
+        "from_name": "Mathura Junction",
+        "to_code": "AGC",
+        "to_name": "Agra Cantt",
+        "distance_km": 54,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-3",
+        "from_code": "AGC",
+        "from_name": "Agra Cantt",
+        "to_code": "VGLJ",
+        "to_name": "VGL Jhansi",
+        "distance_km": 215,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-4",
+        "from_code": "VGLJ",
+        "from_name": "VGL Jhansi",
+        "to_code": "BPL",
+        "to_name": "Bhopal Junction",
+        "distance_km": 292,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-5",
+        "from_code": "BPL",
+        "from_name": "Bhopal Junction",
+        "to_code": "NGP",
+        "to_name": "Nagpur Junction",
+        "distance_km": 389,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-6",
+        "from_code": "NGP",
+        "from_name": "Nagpur Junction",
+        "to_code": "BSL",
+        "to_name": "Bhusaval Junction",
+        "distance_km": 392,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-7",
+        "from_code": "BSL",
+        "from_name": "Bhusaval Junction",
+        "to_code": "NK",
+        "to_name": "Nashik Road",
+        "distance_km": 257,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      },
+      {
+        "section_id": "SEC-3-8",
+        "from_code": "NK",
+        "from_name": "Nashik Road",
+        "to_code": "CSMT",
+        "to_name": "Chhatrapati Shivaji Maharaj Terminus",
+        "distance_km": 184,
+        "section_type": "TRUNK",
+        "max_speed": 130,
+        "num_tracks": 2
+      }
+    ]
+  }
+]

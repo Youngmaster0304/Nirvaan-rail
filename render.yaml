@@ -1,0 +1,43 @@
+# Render Blueprint — A-ABPS backend (FastAPI)
+# https://dashboard.render.com/blueprint
+#
+# Deploy: push this repo to GitHub, then in Render -> New -> Blueprint, pick the
+# repo. Render reads this file and creates the service automatically.
+#
+# NOTE ON DATA: SQLite on Render's free plan is ephemeral — it resets on each
+# redeploy/restart. That is fine for a demo: startup seeds 500 tasks, 4 users,
+# corridors and KPIs automatically whenever the tables are empty. For durable
+# data, attach a Render Disk and point DATABASE_URL at it, or switch to Postgres.
+
+services:
+  - type: web
+    name: a-abps-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      # Generated per-deployment by Render; no need to commit a secret.
+      - key: SECRET_KEY
+        generateValue: true
+      # MUST be the async dialect — app/database.py calls create_async_engine().
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./block_planning.db
+      # Append your Vercel origin after the frontend is deployed, e.g.
+      # http://localhost:3000,http://localhost:5173,https://your-app.vercel.app
+      - key: CORS_ORIGINS
+        sync: false
+      # Optional — see .env.example for how to obtain free keys.
+      - key: DATA_GOV_IN_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

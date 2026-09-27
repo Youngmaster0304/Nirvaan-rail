@@ -1,0 +1,88 @@
+{
+  "header": {
+    "title": "भारतीय रेल",
+    "subtitle": "रेल मंत्रालय, भारत सरकार",
+    "system_name": "एआई ब्लॉक योजना प्रणाली"
+  },
+  "nav": {
+    "home": "होम",
+    "dashboard": "डैशबोर्ड",
+    "tasks": "कार्य",
+    "block_planning": "ब्लॉक योजना",
+    "weekly": "साप्ताहिक योजना",
+    "monthly": "मासिक योजना",
+    "corridor_map": "कॉरिडोर मैप",
+    "simulation": "सिमुलेशन",
+    "audit": "ऑडिट लॉग",
+    "reports": "रिपोर्ट",
+    "help": "सहायता"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "pending_tasks": "लंबित कार्य",
+    "overdue": "अतिदेय",
+    "today_blocks": "आज के ब्लॉक",
+    "corridor_health": "कॉरिडोर स्वास्थ्य",
+    "productivity": "उत्पादकता"
+  },
+  "tasks": {
+    "title": "कार्य",
+    "columns": "कॉलम",
+    "filters": "फ़िल्टर",
+    "actions": "कार्रवाई"
+  },
+  "blocks": {
+    "title": "ब्लॉक",
+    "merge_candidate": "मर्ज उम्मीदवार",
+    "conflict": "टकराव",
+    "approve": "स्वीकार करें",
+    "reject": "अस्वीकार करें"
+  },
+  "status": {
+    "approved": "स्वीकृत",
+    "pending": "लंबित",
+    "rejected": "अस्वीकृत",
+    "merged": "विलय किया गया",
+    "draft": "ड्राफ्ट",
+    "completed": "पूरा हुआ"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "no_data": "कोई डेटा उपलब्ध नहीं",
+    "export_pdf": "पीडीएफ निर्यात",
+    "export_excel": "एक्सेल निर्यात",
+    "generate": "उत्पन्न करें",
+    "download": "डाउनलोड",
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "reset": "रीसेट"
+  },
+  "disclaimers": {
+    "ai_advisory": "एआई सलाह",
+    "system_generated": "सिस्टम जनरेटेड रिपोर्ट",
+    "it_act_warning": "आईटी अधिनियम के तहत चेतावनी",
+    "final_authority": "मैनुअल सत्यापन अंतिम प्राधिकार है।"
+  },
+  "accessibility": {
+    "skip_to_content": "सामग्री पर जाएं",
+    "font_size": "फ़ॉन्ट का आकार",
+    "high_contrast": "उच्च कंट्रास्ट",
+    "screen_reader": "स्क्रीन रीडर"
+  },
+  "footer": {
+    "disclaimer": "अस्वीकरण",
+    "rti": "आरटीआई",
+    "terms": "नियम और शर्तें",
+    "privacy": "गोपनीयता नीति",
+    "help": "सहायता",
+    "contact": "संपर्क करें",
+    "sitemap": "साइटमैप",
+    "copyright": "कॉपीराइट © भारतीय रेल",
+    "last_updated": "अंतिम अद्यतन",
+    "best_viewed": "आधुनिक ब्राउज़रों में सबसे अच्छा देखा गया"
+  }
+}

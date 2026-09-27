@@ -1,0 +1,202 @@
+[
+  {
+    "code": "NDLS",
+    "name": "New Delhi",
+    "zone": "NR",
+    "state": "Delhi",
+    "latitude": 28.642,
+    "longitude": 77.218
+  },
+  {
+    "code": "CNB",
+    "name": "Kanpur Central",
+    "zone": "NCR",
+    "state": "Uttar Pradesh",
+    "latitude": 26.453,
+    "longitude": 80.336
+  },
+  {
+    "code": "PRYJ",
+    "name": "Prayagraj Junction",
+    "zone": "NCR",
+    "state": "Uttar Pradesh",
+    "latitude": 25.435,
+    "longitude": 81.846
+  },
+  {
+    "code": "DDU",
+    "name": "Pt. DD Upadhyaya Junction",
+    "zone": "ECR",
+    "state": "Uttar Pradesh",
+    "latitude": 25.275,
+    "longitude": 83.120
+  },
+  {
+    "code": "GAYA",
+    "name": "Gaya Junction",
+    "zone": "ECR",
+    "state": "Bihar",
+    "latitude": 24.796,
+    "longitude": 85.007
+  },
+  {
+    "code": "DHN",
+    "name": "Dhanbad Junction",
+    "zone": "ECR",
+    "state": "Jharkhand",
+    "latitude": 23.791,
+    "longitude": 86.430
+  },
+  {
+    "code": "ASN",
+    "name": "Asansol Junction",
+    "zone": "ER",
+    "state": "West Bengal",
+    "latitude": 23.685,
+    "longitude": 86.980
+  },
+  {
+    "code": "BWN",
+    "name": "Barddhaman Junction",
+    "zone": "ER",
+    "state": "West Bengal",
+    "latitude": 23.238,
+    "longitude": 87.861
+  },
+  {
+    "code": "HWH",
+    "name": "Howrah Junction",
+    "zone": "ER",
+    "state": "West Bengal",
+    "latitude": 22.583,
+    "longitude": 88.334
+  },
+  {
+    "code": "CSMT",
+    "name": "Chhatrapati Shivaji Maharaj Terminus",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 18.940,
+    "longitude": 72.835
+  },
+  {
+    "code": "PUNE",
+    "name": "Pune Junction",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 18.528,
+    "longitude": 73.874
+  },
+  {
+    "code": "SUR",
+    "name": "Solapur",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 17.659,
+    "longitude": 75.906
+  },
+  {
+    "code": "KLBG",
+    "name": "Kalaburagi Junction",
+    "zone": "CR",
+    "state": "Karnataka",
+    "latitude": 17.324,
+    "longitude": 76.837
+  },
+  {
+    "code": "RC",
+    "name": "Raichur Junction",
+    "zone": "SCR",
+    "state": "Karnataka",
+    "latitude": 16.208,
+    "longitude": 77.348
+  },
+  {
+    "code": "GTL",
+    "name": "Guntakal Junction",
+    "zone": "SCR",
+    "state": "Andhra Pradesh",
+    "latitude": 15.166,
+    "longitude": 77.379
+  },
+  {
+    "code": "RU",
+    "name": "Renigunta Junction",
+    "zone": "SCR",
+    "state": "Andhra Pradesh",
+    "latitude": 13.633,
+    "longitude": 79.414
+  },
+  {
+    "code": "AJJ",
+    "name": "Arakkonam Junction",
+    "zone": "SR",
+    "state": "Tamil Nadu",
+    "latitude": 13.080,
+    "longitude": 79.664
+  },
+  {
+    "code": "MAS",
+    "name": "Chennai Central",
+    "zone": "SR",
+    "state": "Tamil Nadu",
+    "latitude": 13.082,
+    "longitude": 80.275
+  },
+  {
+    "code": "MTJ",
+    "name": "Mathura Junction",
+    "zone": "NCR",
+    "state": "Uttar Pradesh",
+    "latitude": 27.492,
+    "longitude": 77.673
+  },
+  {
+    "code": "AGC",
+    "name": "Agra Cantt",
+    "zone": "NCR",
+    "state": "Uttar Pradesh",
+    "latitude": 27.158,
+    "longitude": 77.990
+  },
+  {
+    "code": "VGLJ",
+    "name": "VGL Jhansi",
+    "zone": "NCR",
+    "state": "Uttar Pradesh",
+    "latitude": 25.441,
+    "longitude": 78.567
+  },
+  {
+    "code": "BPL",
+    "name": "Bhopal Junction",
+    "zone": "WCR",
+    "state": "Madhya Pradesh",
+    "latitude": 23.262,
+    "longitude": 77.416
+  },
+  {
+    "code": "NGP",
+    "name": "Nagpur Junction",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 21.149,
+    "longitude": 79.080
+  },
+  {
+    "code": "BSL",
+    "name": "Bhusaval Junction",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 21.045,
+    "longitude": 75.769
+  },
+  {
+    "code": "NK",
+    "name": "Nashik Road",
+    "zone": "CR",
+    "state": "Maharashtra",
+    "latitude": 19.953,
+    "longitude": 73.840
+  }
+]

@@ -1,0 +1,349 @@
+{
+  "_note": "Bundled offline fallback for /api/gov/railway-live. Records are derived from this project's own station master data and from public data.gov.in usage steps, NOT live government statistics. Set DATA_GOV_IN_API_KEY and DATA_GOV_IN_RESOURCE_IDS to fetch live data.gov.in records.",
+  "datasets": {
+    "railway-stations": {
+      "title": "Station master list used by this deployment",
+      "description": "Stations on the corridors covered by A-ABPS, with zone, state and coordinates.",
+      "source": "Bundled project data (offline fallback for data.gov.in)",
+      "records": [
+        {
+          "code": "NDLS",
+          "station_name": "New Delhi",
+          "zone_code": "NR",
+          "zone": "Northern Railway",
+          "state": "Delhi",
+          "latitude": 28.642,
+          "longitude": 77.218
+        },
+        {
+          "code": "CNB",
+          "station_name": "Kanpur Central",
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 26.453,
+          "longitude": 80.336
+        },
+        {
+          "code": "PRYJ",
+          "station_name": "Prayagraj Junction",
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 25.435,
+          "longitude": 81.846
+        },
+        {
+          "code": "DDU",
+          "station_name": "Pt. DD Upadhyaya Junction",
+          "zone_code": "ECR",
+          "zone": "East Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 25.275,
+          "longitude": 83.12
+        },
+        {
+          "code": "GAYA",
+          "station_name": "Gaya Junction",
+          "zone_code": "ECR",
+          "zone": "East Central Railway",
+          "state": "Bihar",
+          "latitude": 24.796,
+          "longitude": 85.007
+        },
+        {
+          "code": "DHN",
+          "station_name": "Dhanbad Junction",
+          "zone_code": "ECR",
+          "zone": "East Central Railway",
+          "state": "Jharkhand",
+          "latitude": 23.791,
+          "longitude": 86.43
+        },
+        {
+          "code": "ASN",
+          "station_name": "Asansol Junction",
+          "zone_code": "ER",
+          "zone": "Eastern Railway",
+          "state": "West Bengal",
+          "latitude": 23.685,
+          "longitude": 86.98
+        },
+        {
+          "code": "BWN",
+          "station_name": "Barddhaman Junction",
+          "zone_code": "ER",
+          "zone": "Eastern Railway",
+          "state": "West Bengal",
+          "latitude": 23.238,
+          "longitude": 87.861
+        },
+        {
+          "code": "HWH",
+          "station_name": "Howrah Junction",
+          "zone_code": "ER",
+          "zone": "Eastern Railway",
+          "state": "West Bengal",
+          "latitude": 22.583,
+          "longitude": 88.334
+        },
+        {
+          "code": "CSMT",
+          "station_name": "Chhatrapati Shivaji Maharaj Terminus",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 18.94,
+          "longitude": 72.835
+        },
+        {
+          "code": "PUNE",
+          "station_name": "Pune Junction",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 18.528,
+          "longitude": 73.874
+        },
+        {
+          "code": "SUR",
+          "station_name": "Solapur",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 17.659,
+          "longitude": 75.906
+        },
+        {
+          "code": "KLBG",
+          "station_name": "Kalaburagi Junction",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Karnataka",
+          "latitude": 17.324,
+          "longitude": 76.837
+        },
+        {
+          "code": "RC",
+          "station_name": "Raichur Junction",
+          "zone_code": "SCR",
+          "zone": "South Central Railway",
+          "state": "Karnataka",
+          "latitude": 16.208,
+          "longitude": 77.348
+        },
+        {
+          "code": "GTL",
+          "station_name": "Guntakal Junction",
+          "zone_code": "SCR",
+          "zone": "South Central Railway",
+          "state": "Andhra Pradesh",
+          "latitude": 15.166,
+          "longitude": 77.379
+        },
+        {
+          "code": "RU",
+          "station_name": "Renigunta Junction",
+          "zone_code": "SCR",
+          "zone": "South Central Railway",
+          "state": "Andhra Pradesh",
+          "latitude": 13.633,
+          "longitude": 79.414
+        },
+        {
+          "code": "AJJ",
+          "station_name": "Arakkonam Junction",
+          "zone_code": "SR",
+          "zone": "Southern Railway",
+          "state": "Tamil Nadu",
+          "latitude": 13.08,
+          "longitude": 79.664
+        },
+        {
+          "code": "MAS",
+          "station_name": "Chennai Central",
+          "zone_code": "SR",
+          "zone": "Southern Railway",
+          "state": "Tamil Nadu",
+          "latitude": 13.082,
+          "longitude": 80.275
+        },
+        {
+          "code": "MTJ",
+          "station_name": "Mathura Junction",
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 27.492,
+          "longitude": 77.673
+        },
+        {
+          "code": "AGC",
+          "station_name": "Agra Cantt",
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 27.158,
+          "longitude": 77.99
+        },
+        {
+          "code": "VGLJ",
+          "station_name": "VGL Jhansi",
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "state": "Uttar Pradesh",
+          "latitude": 25.441,
+          "longitude": 78.567
+        },
+        {
+          "code": "BPL",
+          "station_name": "Bhopal Junction",
+          "zone_code": "WCR",
+          "zone": "West Central Railway",
+          "state": "Madhya Pradesh",
+          "latitude": 23.262,
+          "longitude": 77.416
+        },
+        {
+          "code": "NGP",
+          "station_name": "Nagpur Junction",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 21.149,
+          "longitude": 79.08
+        },
+        {
+          "code": "BSL",
+          "station_name": "Bhusaval Junction",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 21.045,
+          "longitude": 75.769
+        },
+        {
+          "code": "NK",
+          "station_name": "Nashik Road",
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "state": "Maharashtra",
+          "latitude": 19.953,
+          "longitude": 73.84
+        }
+      ]
+    },
+    "railway-zones": {
+      "title": "Railway zones covered by this deployment",
+      "description": "Zone-wise count of stations present in the A-ABPS station master.",
+      "source": "Bundled project data (offline fallback for data.gov.in)",
+      "records": [
+        {
+          "zone_code": "CR",
+          "zone": "Central Railway",
+          "stations_in_deployment": 7,
+          "states": [
+            "Karnataka",
+            "Maharashtra"
+          ]
+        },
+        {
+          "zone_code": "ECR",
+          "zone": "East Central Railway",
+          "stations_in_deployment": 3,
+          "states": [
+            "Bihar",
+            "Jharkhand",
+            "Uttar Pradesh"
+          ]
+        },
+        {
+          "zone_code": "ER",
+          "zone": "Eastern Railway",
+          "stations_in_deployment": 3,
+          "states": [
+            "West Bengal"
+          ]
+        },
+        {
+          "zone_code": "NCR",
+          "zone": "North Central Railway",
+          "stations_in_deployment": 5,
+          "states": [
+            "Uttar Pradesh"
+          ]
+        },
+        {
+          "zone_code": "NR",
+          "zone": "Northern Railway",
+          "stations_in_deployment": 1,
+          "states": [
+            "Delhi"
+          ]
+        },
+        {
+          "zone_code": "SCR",
+          "zone": "South Central Railway",
+          "stations_in_deployment": 3,
+          "states": [
+            "Andhra Pradesh",
+            "Karnataka"
+          ]
+        },
+        {
+          "zone_code": "SR",
+          "zone": "Southern Railway",
+          "stations_in_deployment": 2,
+          "states": [
+            "Tamil Nadu"
+          ]
+        },
+        {
+          "zone_code": "WCR",
+          "zone": "West Central Railway",
+          "stations_in_deployment": 1,
+          "states": [
+            "Madhya Pradesh"
+          ]
+        }
+      ]
+    },
+    "data-gov-in-howto": {
+      "title": "How to enable live data.gov.in records",
+      "description": "Steps to obtain a free data.gov.in API key and configure this backend.",
+      "source": "data.gov.in public documentation",
+      "records": [
+        {
+          "step": 1,
+          "action": "Register on data.gov.in",
+          "detail": "Open data.gov.in and create a free account with an email address.",
+          "url": "https://data.gov.in"
+        },
+        {
+          "step": 2,
+          "action": "Open 'Get API Key'",
+          "detail": "The dashboard issues a free api-key for the data.gov.in resource API.",
+          "url": "https://data.gov.in/user/login"
+        },
+        {
+          "step": 3,
+          "action": "Pick railway resources",
+          "detail": "Search data.gov.in for 'railway' resources and copy each resource id (the UUID in its URL).",
+          "url": "https://data.gov.in/search/railways"
+        },
+        {
+          "step": 4,
+          "action": "Configure this backend",
+          "detail": "Set DATA_GOV_IN_API_KEY and DATA_GOV_IN_RESOURCE_IDS=datasetKey:resourceId,... in .env, then restart.",
+          "url": ""
+        },
+        {
+          "step": 5,
+          "action": "Automatic fallback",
+          "detail": "Without a key or offline, /api/gov/railway-live serves the bundled fallback records with cached=true.",
+          "url": ""
+        }
+      ]
+    }
+  }
+}

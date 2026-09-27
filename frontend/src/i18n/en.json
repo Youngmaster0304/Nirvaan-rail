@@ -1,0 +1,88 @@
+{
+  "header": {
+    "title": "Indian Railways",
+    "subtitle": "Ministry of Railways, Government of India",
+    "system_name": "AI Block Planning System"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "tasks": "Tasks",
+    "block_planning": "Block Planning",
+    "weekly": "Weekly Plan",
+    "monthly": "Monthly Plan",
+    "corridor_map": "Corridor Map",
+    "simulation": "Simulation",
+    "audit": "Audit Log",
+    "reports": "Reports",
+    "help": "Help"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "pending_tasks": "Pending Tasks",
+    "overdue": "Overdue",
+    "today_blocks": "Today's Blocks",
+    "corridor_health": "Corridor Health",
+    "productivity": "Productivity"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "columns": "Columns",
+    "filters": "Filters",
+    "actions": "Actions"
+  },
+  "blocks": {
+    "title": "Blocks",
+    "merge_candidate": "Merge Candidate",
+    "conflict": "Conflict",
+    "approve": "Approve",
+    "reject": "Reject"
+  },
+  "status": {
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "merged": "Merged",
+    "draft": "Draft",
+    "completed": "Completed"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "no_data": "No Data Available",
+    "export_pdf": "Export PDF",
+    "export_excel": "Export Excel",
+    "generate": "Generate",
+    "download": "Download",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset"
+  },
+  "disclaimers": {
+    "ai_advisory": "AI Advisory",
+    "system_generated": "System Generated Report",
+    "it_act_warning": "Warning under IT Act",
+    "final_authority": "Manual verification is final authority."
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to Content",
+    "font_size": "Font Size",
+    "high_contrast": "High Contrast",
+    "screen_reader": "Screen Reader"
+  },
+  "footer": {
+    "disclaimer": "Disclaimer",
+    "rti": "RTI",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "help": "Help",
+    "contact": "Contact Us",
+    "sitemap": "Sitemap",
+    "copyright": "Copyright © Indian Railways",
+    "last_updated": "Last Updated",
+    "best_viewed": "Best viewed in modern browsers"
+  }
+}
