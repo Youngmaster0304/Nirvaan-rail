@@ -71,7 +71,8 @@ async def startup_event():
     logger.info("Startup complete.")
 
 
-@app.get("/api/health", tags=["Health"])
+# api_route (not get) so uptime probes that use HEAD don't get 405.
+@app.api_route("/api/health", methods=["GET", "HEAD"], tags=["Health"])
 async def health_check():
     """Health check endpoint."""
     try:
@@ -88,7 +89,7 @@ async def health_check():
     }
 
 
-@app.get("/", include_in_schema=False)
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 async def root():
     """Root redirect to /docs."""
     return RedirectResponse(url="/docs")
