@@ -21,7 +21,7 @@ services:
     autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.13.14
       - key: PYTHONUNBUFFERED
         value: "1"
       # Generated per-deployment by Render; no need to commit a secret.

@@ -1,4 +1,6 @@
-FROM python:3.11-slim
+# 3.13 matches the dev venv that trained model.pkl (numpy 2.5.3 / shap 0.52
+# need >=3.12); keep in sync with requirements pins.
+FROM python:3.13-slim
 
 WORKDIR /app
 
