@@ -277,7 +277,7 @@ export interface ChatMessage {
 export interface ChatResponse {
   reply: string;
   source: 'db' | 'llm' | 'rules';
-  data?: Record<string, number | string> | null;
+  data?: Record<string, unknown> | null;
 }
 
 export interface SuggestedPrompts {

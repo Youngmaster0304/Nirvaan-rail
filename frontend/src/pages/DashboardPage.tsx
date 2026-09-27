@@ -212,7 +212,10 @@ export default function DashboardPage() {
         key: 'asset_failure_rate',
         name: 'Asset Failure Rate',
         align: 'right',
-        render: (r) => <span className="num">{pct(r.asset_failure_rate)}</span>,
+        render: (r) => {
+          const v = r.asset_failure_rate ?? 0;
+          return <span className="num">{pct(v <= 1.0001 ? v * 100 : v)}</span>;
+        },
       },
       {
         key: 'composite_score',

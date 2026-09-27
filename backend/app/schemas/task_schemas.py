@@ -37,6 +37,7 @@ class TaskCreate(TaskBase):
 class TaskResponse(TaskBase):
     task_id: str = Field(description="Unique ID of the task")
     status: str = Field(description="Current status of the task")
+    days_overdue: int = Field(0, description="Days past the due date; greater than 0 means the task is overdue")
     priority_score: Optional[float] = Field(None, description="AI-generated priority score")
     shap_values: Optional[Dict[str, float]] = Field(None, description="SHAP values for the priority score")
     created_at: datetime = Field(description="Creation timestamp")
@@ -58,6 +59,7 @@ class TaskResponse(TaskBase):
                     "safety_constraints": ["Requires complete track closure"],
                     "weather_sensitivity": True,
                     "status": "PENDING",
+                    "days_overdue": 12,
                     "priority_score": 0.95,
                     "shap_values": {"defect_severity_Critical": 0.5, "required_duration_min": -0.1},
                     "created_at": "2024-01-01T10:00:00Z",

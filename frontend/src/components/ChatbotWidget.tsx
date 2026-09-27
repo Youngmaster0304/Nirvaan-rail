@@ -9,8 +9,56 @@ interface UiMessage {
   content: string;
   time: string;
   source?: 'db' | 'rules' | 'llm';
-  data?: Record<string, number | string> | null;
+  data?: Record<string, unknown> | null;
   error?: boolean;
+}
+
+type DataCell = { key: string; label: string; value: string; wide: boolean };
+
+const MAX_DATA_CELLS = 14;
+
+const pretty = (key: string) => key.replace(/_/g, ' ');
+
+function fmtScalar(v: unknown): string {
+  if (v == null) return '—';
+  if (Array.isArray(v)) return v.map((x) => (x && typeof x === 'object' ? JSON.stringify(x) : String(x))).join(', ');
+  if (typeof v === 'object') return Object.entries(v as Record<string, unknown>).map(([k, x]) => `${pretty(k)} ${fmtScalar(x)}`).join(' · ');
+  return String(v);
+}
+
+function summariseRecord(obj: Record<string, unknown>): string {
+  const keys = Object.keys(obj);
+  const shown = keys.slice(0, 4);
+  const text = shown.map((k) => `${pretty(k)} ${fmtScalar(obj[k])}`).join(' · ');
+  return keys.length > shown.length ? `${text} · +${keys.length - shown.length} more` : text;
+}
+
+/** Turns the assistant payload into display cells; nested objects and arrays
+ *  are expanded instead of hitting the DOM as "[object Object]". */
+function flattenData(data: Record<string, unknown>): DataCell[] {
+  const cells: DataCell[] = [];
+  for (const [k, v] of Object.entries(data)) {
+    if (cells.length >= MAX_DATA_CELLS) break;
+    if (v == null) continue;
+    if (Array.isArray(v)) {
+      const shown = v.slice(0, 3);
+      shown.forEach((item, i) => {
+        const value = item && typeof item === 'object' ? summariseRecord(item as Record<string, unknown>) : fmtScalar(item);
+        cells.push({ key: `${k}-${i}`, label: `${pretty(k)} ${i + 1}`, value, wide: value.length > 26 });
+      });
+      if (v.length > shown.length) {
+        cells.push({ key: `${k}-more`, label: pretty(k), value: `+${v.length - shown.length} more`, wide: false });
+      }
+    } else if (typeof v === 'object') {
+      for (const [ik, iv] of Object.entries(v as Record<string, unknown>)) {
+        if (cells.length >= MAX_DATA_CELLS) break;
+        cells.push({ key: `${k}-${ik}`, label: `${pretty(k)} · ${pretty(ik)}`, value: fmtScalar(iv), wide: false });
+      }
+    } else {
+      cells.push({ key: k, label: pretty(k), value: fmtScalar(v), wide: false });
+    }
+  }
+  return cells;
 }
 
 const FALLBACK_PROMPTS = [
@@ -207,15 +255,25 @@ export const ChatbotWidget: React.FC = () => {
 
                 {m.role === 'assistant' && m.data && Object.keys(m.data).length > 0 && (
                   <div className="mt-1 w-full grid grid-cols-2 gap-1">
-                    {Object.entries(m.data).map(([k, v]) => (
-                      <div
-                        key={k}
-                        className="border border-hairline bg-white rounded-chip px-2 py-1 flex items-baseline justify-between gap-2"
-                      >
-                        <span className="section-label truncate">{k.replace(/_/g, ' ')}</span>
-                        <span className="mono text-[11px] font-bold text-ink">{String(v)}</span>
-                      </div>
-                    ))}
+                    {flattenData(m.data).map((c) =>
+                      c.wide ? (
+                        <div
+                          key={c.key}
+                          className="col-span-2 border border-hairline bg-white rounded-chip px-2 py-1"
+                        >
+                          <div className="section-label">{c.label}</div>
+                          <div className="mono text-[11px] font-bold text-ink mt-0.5">{c.value}</div>
+                        </div>
+                      ) : (
+                        <div
+                          key={c.key}
+                          className="border border-hairline bg-white rounded-chip px-2 py-1 flex items-baseline justify-between gap-2"
+                        >
+                          <span className="section-label truncate">{c.label}</span>
+                          <span className="mono text-[11px] font-bold text-ink">{c.value}</span>
+                        </div>
+                      ),
+                    )}
                   </div>
                 )}
 
