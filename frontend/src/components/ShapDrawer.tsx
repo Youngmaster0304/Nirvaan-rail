@@ -139,10 +139,15 @@ export const ShapDrawer: React.FC<ShapDrawerProps> = ({ task, onClose }) => {
 
   return (
     <>
-      <div className="scrim no-print" onClick={onClose} aria-hidden="true" />
+      {/* Frosted Glass Backdrop Blur matching Image 2 */}
+      <div
+        className="fixed inset-0 z-40 bg-[#001128]/45 backdrop-blur-md transition-all duration-300 no-print"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <aside
         ref={panelRef}
-        className="drawer no-print"
+        className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-[480px] bg-white shadow-2xl flex flex-col border-l border-[#C8D4E6] no-print animate-in slide-in-from-right duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="shap-title"

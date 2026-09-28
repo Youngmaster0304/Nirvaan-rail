@@ -99,6 +99,18 @@ export const GovtNavbar: React.FC = () => {
             >
               Block Programme
             </NavLink>
+            <NavLink
+              to="/weekly"
+              className={({ isActive }) => cn('nav-pill', isActive && 'active')}
+            >
+              Weekly Plan
+            </NavLink>
+            <NavLink
+              to="/monthly"
+              className={({ isActive }) => cn('nav-pill', isActive && 'active')}
+            >
+              Monthly Plan
+            </NavLink>
 
             {/* More Menu */}
             <div className="relative" ref={moreRef}>
@@ -301,6 +313,17 @@ export const GovtNavbar: React.FC = () => {
                     <span>My Approval Audit Trail</span>
                   </button>
                   <div className="border-t border-slate-100 my-1" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate('/login');
+                    }}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-[#002D62] font-medium"
+                  >
+                    <UserIcon className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Switch Persona / Login Page</span>
+                  </button>
                   <button
                     type="button"
                     onClick={handleLogout}
