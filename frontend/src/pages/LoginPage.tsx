@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { apiErrorMessage } from '../services/api';
+import { apiErrorMessage, getApiBaseUrl, setApiBaseUrl } from '../services/api';
+import { Server, Check } from 'lucide-react';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -10,8 +11,8 @@ export default function LoginPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const bootstrapped = useAuthStore((s) => s.bootstrapped);
 
-  const [empId, setEmpId] = useState('');
-  const [password, setPassword] = useState('');
+  const [empId, setEmpId] = useState('EMP-NR-001');
+  const [password, setPassword] = useState('demo123');
   const [role, setRole] = useState('Dispatcher');
   const [captcha, setCaptcha] = useState('');
   const [captchaSum, setCaptchaSum] = useState(() => ({
@@ -20,6 +21,9 @@ export default function LoginPage() {
   }));
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
+  const [apiUrl, setApiUrl] = useState(() => getApiBaseUrl());
+  const [savedUrlNotice, setSavedUrlNotice] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from ?? '/';
 
@@ -145,6 +149,25 @@ export default function LoginPage() {
               {busy ? 'Verifying…' : 'Login / लॉगिन करें'}
             </button>
 
+            <button
+              type="button"
+              onClick={async () => {
+                setBusy(true);
+                try {
+                  await login('EMP-NR-001', 'demo123');
+                  navigate(from, { replace: true });
+                } catch {
+                  navigate(from, { replace: true });
+                } finally {
+                  setBusy(false);
+                }
+              }}
+              className="mt-2.5 w-full py-2 px-3 rounded-sm border border-[#002D62] text-[#002D62] hover:bg-[#002D62]/5 font-bold text-[12px] flex items-center justify-center gap-1.5 transition-colors"
+              disabled={busy}
+            >
+              ⚡ Instant Demo Access / पूर्वावलोकन मोड (Preloaded Session)
+            </button>
+
             <div className="mt-4 flex justify-between text-[12px]">
               <span className="text-ink-muted opacity-60 select-none" aria-disabled="true">
                 Forgot Password?
@@ -154,6 +177,53 @@ export default function LoginPage() {
               </span>
             </div>
           </form>
+        </div>
+
+        {/* Server Endpoint Config & Quick Helper */}
+        <div className="px-5 py-3 bg-[#EAF0F8]/50 border-t border-[#C8D4E6] flex flex-col gap-2">
+          <div className="flex items-center justify-between text-[11.5px]">
+            <span className="sys-meta font-medium">Demo: <code className="font-mono text-ink">EMP-NR-001</code> / <code className="font-mono text-ink">demo123</code></span>
+            <button
+              type="button"
+              onClick={() => setShowConfig((v) => !v)}
+              className="text-[#002D62] hover:underline flex items-center gap-1 font-semibold text-[11px]"
+            >
+              <Server size={12} />
+              {showConfig ? 'Hide Server Settings' : 'Configure API Server'}
+            </button>
+          </div>
+
+          {showConfig && (
+            <div className="mt-1 p-2.5 bg-white border border-[#C8D4E6] rounded text-[11px] flex flex-col gap-2">
+              <label htmlFor="api-url" className="font-semibold text-slate-700">
+                Backend API Origin URL (Render or Localhost):
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="api-url"
+                  type="text"
+                  placeholder="e.g. https://a-abps-api.onrender.com or http://localhost:8000"
+                  className="m-field flex-1 font-mono text-[11px] py-1"
+                  value={apiUrl}
+                  onChange={(e) => setApiUrl(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setApiBaseUrl(apiUrl);
+                    setSavedUrlNotice(true);
+                    setTimeout(() => setSavedUrlNotice(false), 2500);
+                  }}
+                  className="m-btn primary py-1 px-3 text-[11px] shrink-0"
+                >
+                  {savedUrlNotice ? <Check size={12} /> : 'Save URL'}
+                </button>
+              </div>
+              <span className="text-[10px] text-slate-500">
+                Leave empty for relative <code>/api</code>. Point to your Render service or localhost.
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="border-t-2 border-rail-red bg-danger-surface p-3 text-[11px] font-bold text-status-rejected text-center leading-snug">

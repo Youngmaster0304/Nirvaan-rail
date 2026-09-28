@@ -36,11 +36,27 @@ export type * from './types';
  * Absolute backend origin for deployed builds (e.g. https://a-abps.onrender.com).
  * Left empty in local dev and Docker, where Vite/nginx proxy `/api` to the backend.
  */
-const RAW_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
-const API_BASE = RAW_BASE.replace(/\/+$/, '');
+export function getApiBaseUrl(): string {
+  if (typeof window !== 'undefined') {
+    const custom = localStorage.getItem('cris_api_base_url');
+    if (custom) return custom.trim().replace(/\/+$/, '');
+  }
+  const raw = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
+  return raw.trim().replace(/\/+$/, '');
+}
+
+export function setApiBaseUrl(url: string): void {
+  if (typeof window !== 'undefined') {
+    if (url && url.trim()) {
+      localStorage.setItem('cris_api_base_url', url.trim().replace(/\/+$/, ''));
+    } else {
+      localStorage.removeItem('cris_api_base_url');
+    }
+  }
+}
 
 export const apiClient = axios.create({
-  baseURL: `${API_BASE}/api`,
+  baseURL: getApiBaseUrl() ? `${getApiBaseUrl()}/api` : '/api',
   timeout: 30000,
 });
 
@@ -59,6 +75,10 @@ export function setUnauthorizedHandler(handler: () => void) {
 }
 
 apiClient.interceptors.request.use((config) => {
+  const base = getApiBaseUrl();
+  if (base) {
+    config.baseURL = `${base}/api`;
+  }
   const token = localStorage.getItem(TOKEN_KEY);
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
