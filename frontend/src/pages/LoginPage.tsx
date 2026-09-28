@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { apiErrorMessage, getApiBaseUrl, setApiBaseUrl } from '../services/api';
+import { apiErrorMessage } from '../services/api';
 import { GovtHeader } from '../components/GovtHeader';
 import { GovtFooter } from '../components/GovtFooter';
-import { Server, Check, ShieldCheck, UserCheck, KeyRound, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, UserCheck, KeyRound, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
 
 const ROLES = [
   { id: 'Chief Controller', label: 'Chief Controller (CPTM)', empId: 'EMP-NR-001', zone: 'NCR' },
@@ -30,9 +30,6 @@ export default function LoginPage() {
   }));
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [showConfig, setShowConfig] = useState(false);
-  const [apiUrl, setApiUrl] = useState(() => getApiBaseUrl());
-  const [savedUrlNotice, setSavedUrlNotice] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from ?? '/';
 
@@ -268,56 +265,6 @@ export default function LoginPage() {
                 <span>⚡ Instant Demo Access / पूर्वावलोकन मोड (Preloaded Session)</span>
               </button>
             </form>
-
-            {/* Server Settings Accordion */}
-            <div className="mt-4 pt-3 border-t border-[#DCE5F0] flex flex-col gap-1.5">
-              <div className="flex items-center justify-between text-[11px] text-[#546380]">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#138808]" />
-                  <span className="font-mono text-[10px] text-ink">Render API: Connected</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowConfig((v) => !v)}
-                  className="text-[#002D62] hover:underline flex items-center gap-1 font-semibold text-[11px]"
-                >
-                  <Server size={11} />
-                  <span>{showConfig ? 'Hide Settings' : 'Configure Server'}</span>
-                </button>
-              </div>
-
-              {showConfig && (
-                <div className="mt-2 p-2.5 rounded-chip bg-[#F8FAFD] border border-[#CBD5E1] text-[11px] space-y-2">
-                  <label htmlFor="api-url" className="text-slate-700 font-semibold block text-[11px]">
-                    Backend API Origin URL:
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      id="api-url"
-                      type="text"
-                      className="m-field flex-1 font-mono text-[11px] py-1"
-                      value={apiUrl}
-                      onChange={(e) => setApiUrl(e.target.value)}
-                      placeholder="https://nirvaan-f4oi.onrender.com"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setApiBaseUrl(apiUrl);
-                        setSavedUrlNotice(true);
-                        setTimeout(() => setSavedUrlNotice(false), 2500);
-                      }}
-                      className="m-btn primary py-1 px-3 text-[11px] shrink-0"
-                    >
-                      {savedUrlNotice ? <Check size={12} /> : 'Save'}
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-[#8090A8]">
-                    Live backend: <code>https://nirvaan-f4oi.onrender.com</code> or local <code>http://127.0.0.1:8000</code>
-                  </p>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Statutory Red Warning Notice */}
