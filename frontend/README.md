@@ -2,6 +2,9 @@
 
 Official Indian Railways / CRIS-compliant Web Portal for Problem Statement **SIH26027: AI-Powered Automatic Block Planning System**.
 
+> 🚀 **Live Production Portal**: [https://nirvaan-rail.vercel.app](https://nirvaan-rail.vercel.app)  
+> 🌐 **Live Backend API**: [https://nirvaan-f4oi.onrender.com](https://nirvaan-f4oi.onrender.com)
+
 ## Quick Start
 ```bash
 cd frontend
@@ -58,7 +61,8 @@ Styled strictly in accordance with **GIGW 3.0 (Guidelines for Indian Government 
 ---
 
 ## Production Deployment (Vercel)
-Built automatically from the repository root via `vercel.json`:
-- **Build Command**: `npm --prefix frontend run build`
-- **Output Directory**: `frontend/dist`
-- **Backend API**: Connects to live Render backend (`https://nirvaan-f4oi.onrender.com`) via `VITE_API_URL`.
+- **Live Portal URL**: [https://nirvaan-rail.vercel.app](https://nirvaan-rail.vercel.app)
+- **Built automatically** from the repository root via `vercel.json`:
+  - **Build Command**: `npm --prefix frontend run build`
+  - **Output Directory**: `frontend/dist`
+  - **Backend API**: Connects to live Render backend (`https://nirvaan-f4oi.onrender.com`) via `VITE_API_URL`.

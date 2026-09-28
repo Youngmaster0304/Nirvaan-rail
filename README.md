@@ -3,6 +3,7 @@
 
 > **Problem Statement ID**: 26027 | **Organization**: Ministry of Railways | **Category**: Software
 >
+> 🚀 **Live Web Portal (Vercel)**: [https://nirvaan-rail.vercel.app](https://nirvaan-rail.vercel.app)  
 > 🌐 **Live Backend (Render)**: [https://nirvaan-f4oi.onrender.com](https://nirvaan-f4oi.onrender.com)  
 > 📑 **Interactive API Docs (Swagger)**: [https://nirvaan-f4oi.onrender.com/docs](https://nirvaan-f4oi.onrender.com/docs)  
 > 💻 **GitHub Repository**: [Youngmaster0304/sih26027-a-abps](https://github.com/Youngmaster0304/sih26027-a-abps)
@@ -241,8 +242,8 @@ and explains any fallback in `note`.
 3. Configure `CORS_ORIGINS` in Render environment settings with your Vercel URL (e.g. `https://<app>.vercel.app,http://localhost:5173`).
 4. On startup, SQLite automatically seeds 500+ tasks across Civil, Electrical, and Signaling with pre-calculated LightGBM priority scores.
 
-### Frontend → Vercel (Monorepo Zero-Config)
-The repository includes a root `vercel.json` and `package-lock.json` configured for seamless monorepo deployment:
+### Frontend → Vercel (Live)
+- **Live Web Portal**: [https://nirvaan-rail.vercel.app](https://nirvaan-rail.vercel.app)
 - **Root Directory**: `.` (Repository root)
 - **Build Command**: `npm --prefix frontend run build`
 - **Install Command**: `npm --prefix frontend install`
