@@ -15,21 +15,22 @@ interface SHAPExplanationProps {
 }
 
 /**
- * Horizontal contribution bars for one SHAP explanation.
- * Used by the SHAP Explainability drawer; pure markup, no chart library.
+ * Visual SHAP Factor Contributions component matching the Figma CRIS AI design:
+ * Displays a clean horizontal waterfall bar chart on top, followed by the structured
+ * FACTOR / SCORE Δ breakdown table with colored status dots.
  */
 export const SHAPExplanation: React.FC<SHAPExplanationProps> = ({
   contributions,
-  caption = "Bars show each factor's additive contribution to the AI priority score.",
-  maxRows = 14,
+  caption = "Bars show each factor's additive contribution to the AI priority score. Positive values increase priority; negative values decrease it.",
+  maxRows = 10,
 }) => {
   const rows = useMemo(
     () => [...contributions].sort((a, b) => Math.abs(b.value) - Math.abs(a.value)).slice(0, maxRows),
     [contributions, maxRows],
   );
 
-  const peak = useMemo(
-    () => Math.max(0.0001, ...rows.map((r) => Math.abs(r.value))),
+  const maxVal = useMemo(
+    () => Math.max(1, ...rows.map((r) => Math.abs(r.value))),
     [rows],
   );
 
@@ -42,34 +43,113 @@ export const SHAPExplanation: React.FC<SHAPExplanationProps> = ({
   }
 
   return (
-    <div>
-      <ul className="flex flex-col gap-2.5">
-        {rows.map((row) => {
-          const pct = Math.max(2, (Math.abs(row.value) / peak) * 100);
-          const positive = row.value >= 0;
-          return (
-            <li key={row.feature} className="grid grid-cols-[1fr] gap-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[11px] font-semibold text-ink truncate" title={row.feature}>
-                  {row.feature}
-                </span>
-                <span
-                  className={`mono text-[11px] font-bold shrink-0 ${positive ? 'text-status-approved' : 'text-status-rejected'}`}
-                >
-                  {row.display ?? `${positive ? '+' : ''}${row.value.toFixed(3)}`}
+    <div className="flex flex-col gap-3.5">
+      {/* 1. Visual Bar Chart Box matching Figma */}
+      <div className="border border-[#CBD5E1] rounded bg-white p-3 shadow-xs">
+        <div className="relative h-[130px] flex flex-col justify-between py-1">
+          {/* Subtle vertical grid lines */}
+          <div className="absolute inset-0 flex justify-between pointer-events-none opacity-20">
+            <div className="border-r border-[#94A3B8] h-full" />
+            <div className="border-r border-[#94A3B8] h-full" />
+            <div className="border-r border-[#94A3B8] h-full" />
+            <div className="border-r border-[#94A3B8] h-full" />
+          </div>
+
+          {/* Bars */}
+          <div className="relative z-10 flex flex-col justify-around h-full">
+            {rows.map((r) => {
+              const widthPct = Math.min(100, Math.max(3, (Math.abs(r.value) / maxVal) * 100));
+              const isPos = r.value >= 0;
+              const barColor =
+                r.value >= 30
+                  ? '#B91C1C'
+                  : r.value >= 10
+                  ? '#D97706'
+                  : r.value >= 0
+                  ? '#EA580C'
+                  : '#15803D';
+
+              return (
+                <div key={r.feature} className="flex items-center gap-2 group">
+                  <div className="w-[110px] shrink-0 text-[10px] text-[#475569] font-medium truncate" title={r.feature}>
+                    {r.feature}
+                  </div>
+                  <div className="flex-1 bg-[#F1F5F9] h-3.5 rounded-xs overflow-hidden relative">
+                    <div
+                      className="h-full rounded-xs transition-all duration-300"
+                      style={{
+                        width: `${widthPct}%`,
+                        backgroundColor: barColor,
+                      }}
+                    />
+                  </div>
+                  <span className="mono text-[10px] font-bold w-10 text-right shrink-0" style={{ color: barColor }}>
+                    {r.display ?? `${isPos ? '+' : ''}${r.value}`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* X-axis tick labels */}
+        <div className="border-t border-[#E2E8F0] pt-1 mt-1 flex justify-between text-[9px] mono text-[#94A3B8]">
+          <span>0</span>
+          <span>{Math.round(maxVal * 0.33)}</span>
+          <span>{Math.round(maxVal * 0.66)}</span>
+          <span>{Math.round(maxVal)}</span>
+        </div>
+      </div>
+
+      {/* Caption */}
+      <p className="text-[10.5px] leading-snug text-[#64748B]">{caption}</p>
+
+      {/* 2. Structured Factor Breakdown Table matching Figma */}
+      <div className="border border-[#CBD5E1] rounded overflow-hidden shadow-xs bg-white">
+        <div className="bg-[#F8FAFC] px-3 py-1.5 border-b border-[#CBD5E1] flex justify-between text-[10px] font-bold uppercase tracking-wider text-[#475569]">
+          <span>FACTOR</span>
+          <span>SCORE Δ</span>
+        </div>
+        <div className="divide-y divide-[#F1F5F9] text-[11px]">
+          {rows.map((r) => {
+            const isPos = r.value >= 0;
+            const dotColor =
+              r.value >= 30
+                ? '#DC2626'
+                : r.value >= 10
+                ? '#D97706'
+                : r.value >= 0
+                ? '#F59E0B'
+                : '#16A34A';
+            const textColor =
+              r.value >= 30
+                ? 'text-[#DC2626]'
+                : r.value >= 10
+                ? 'text-[#D97706]'
+                : r.value >= 0
+                ? 'text-[#D97706]'
+                : 'text-[#16A34A]';
+
+            return (
+              <div key={r.feature} className="px-3 py-2 flex items-center justify-between gap-3 hover:bg-[#F8FAFC]">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: dotColor }}
+                  />
+                  <span className="font-medium text-[#1E293B] truncate" title={r.feature}>
+                    {r.feature}
+                  </span>
+                </div>
+                <span className={`mono font-bold shrink-0 text-[11.5px] ${textColor}`}>
+                  {r.display ?? `${isPos ? '+' : ''}${r.value}`}
                 </span>
               </div>
-              <div className="hbar" role="img" aria-label={`${row.feature}: ${row.display ?? row.value}`}>
-                <span
-                  className={`hbar-fill ${positive ? 'pos' : 'neg'}`}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      <p className="mt-3 text-[10.5px] leading-snug text-ink-muted border-t border-hairline pt-2">{caption}</p>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
+

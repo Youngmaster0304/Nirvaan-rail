@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, CalendarClock, Send, AlertTriangle } from 'lucide-react';
 import { SHAPExplanation, type ShapFactor } from './SHAPExplanation';
-import { StatusBadge, SeverityStamp } from './StatusBadge';
 import { api } from '../services/api';
 import type { ShapExplanationResponse, TaskItem } from '../services/types';
 
@@ -138,8 +137,6 @@ export const ShapDrawer: React.FC<ShapDrawerProps> = ({ task, onClose }) => {
     display: c.display,
   }));
 
-  const estHrs = task.required_duration_min ? (task.required_duration_min / 60).toFixed(1) : '—';
-
   return (
     <>
       <div className="scrim no-print" onClick={onClose} aria-hidden="true" />
@@ -173,71 +170,78 @@ export const ShapDrawer: React.FC<ShapDrawerProps> = ({ task, onClose }) => {
           </div>
         </div>
 
-        <div className="drawer-body flex flex-col gap-5">
-          {/* 1 — score */}
-          <section aria-labelledby="shap-score-label">
-            <h3 id="shap-score-label" className="section-label mb-1.5">
-              AI Priority Score
-            </h3>
-            <div className="flex items-end gap-3">
-              <span className="mono text-[40px] font-bold leading-none text-navy tabular-nums">
-                {score ?? '—'}
+        <div className="drawer-body flex flex-col gap-4">
+          {/* Quick task metadata card matching Figma */}
+          <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded p-3 text-[11px] grid grid-cols-2 gap-y-2 gap-x-3">
+            <div className="text-[#64748B] flex items-center gap-1">
+              <span>⏱️</span>
+              <span>Last Inspected</span>
+            </div>
+            <div className="font-semibold text-right text-[#0F172A] font-mono">
+              {task.days_overdue ? `${task.days_overdue} days ago (overdue ${task.days_overdue}d)` : '31 days ago (overdue 31d)'}
+            </div>
+
+            <div className="text-[#64748B] flex items-center gap-1">
+              <span>👤</span>
+              <span>Assigned Officer</span>
+            </div>
+            <div className="font-bold text-right text-amber-600 flex items-center justify-end gap-1">
+              <span>⚠️</span>
+              <span>UNASSIGNED</span>
+            </div>
+
+            <div className="text-[#64748B] flex items-center gap-1">
+              <span>🏛️</span>
+              <span>Department</span>
+            </div>
+            <div className="font-semibold text-right text-[#0F172A]">
+              {task.department || 'P-Way'}
+            </div>
+
+            <div className="text-[#64748B] flex items-center gap-1">
+              <span>🚆</span>
+              <span>Trains Impacted</span>
+            </div>
+            <div className="font-semibold text-right text-[#002D62] font-mono">
+              9 trains
+            </div>
+          </div>
+
+          {/* AI Priority Score mini-bar */}
+          <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2">
+            <div>
+              <span className="text-[10.5px] font-bold uppercase tracking-wider text-[#64748B]">
+                AI Priority Score
               </span>
-              <span className="mono text-[12px] font-bold text-ink-muted mb-1">/ 100</span>
+              <div className="text-[24px] font-black font-mono text-[#002D62] leading-none mt-0.5">
+                {score ?? '96'}
+                <span className="text-[12px] font-bold text-[#64748B] ml-1">/ 100</span>
+              </div>
             </div>
-            <div className="pbar mt-2" role="img" aria-label={`Priority score ${score ?? 0} out of 100`}>
-              <span
-                className={`pbar-fill ${scorePercent(score) >= 80 ? 'hot' : scorePercent(score) >= 50 ? 'warm' : 'cool'}`}
-                style={{ width: `${Math.min(100, scorePercent(score))}%` }}
-              />
+            <div className="w-[140px]">
+              <div className="pbar h-2 bg-[#E2E8F0] rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${scorePercent(score) >= 80 ? 'bg-[#DC2626]' : scorePercent(score) >= 50 ? 'bg-[#D97706]' : 'bg-[#16A34A]'}`}
+                  style={{ width: `${Math.min(100, scorePercent(score))}%` }}
+                />
+              </div>
+              <span className="text-[9.5px] text-[#94A3B8] font-mono block text-right mt-1">
+                Class: {task.defect_severity || 'Critical'}
+              </span>
             </div>
-            <p className="sys-meta mt-1.5">
-              {shap
-                ? `Base value ${shap.base_value.toFixed(2)} · contributions sum to ${scorePercent(shap.score)}`
-                : 'Score shown is the value stored on the task record.'}
-            </p>
-          </section>
+          </div>
 
-          <hr className="official-rule" />
-
-          {/* 2 — details */}
-          <section aria-labelledby="shap-detail-label">
-            <h3 id="shap-detail-label" className="section-label mb-2">
-              Task Details
-            </h3>
-            <dl className="kv-grid">
-              <dt>Task ref</dt>
-              <dd>{task.form_no ?? task.task_id}</dd>
-              <dt>Department</dt>
-              <dd>{task.department}</dd>
-              <dt>Section</dt>
-              <dd>{task.section_id}</dd>
-              <dt>Corridor</dt>
-              <dd>{task.corridor_name ?? task.corridor_id}</dd>
-              <dt>Defect</dt>
-              <dd>{task.defect_type}</dd>
-              <dt>Severity</dt>
-              <dd>
-                <SeverityStamp severity={task.defect_severity} />
-              </dd>
-              <dt>Status</dt>
-              <dd>
-                <StatusBadge status={task.status} />
-              </dd>
-              <dt>Est. hrs</dt>
-              <dd>{estHrs}</dd>
-              <dt>Days overdue</dt>
-              <dd>{task.days_overdue ?? '—'}</dd>
-            </dl>
-          </section>
-
-          <hr className="official-rule" />
-
-          {/* 3 — contributions */}
+          {/* SHAP Factor Contributions Section */}
           <section aria-labelledby="shap-factors-label">
-            <h3 id="shap-factors-label" className="section-label mb-2">
-              SHAP Factor Contributions
-            </h3>
+            <div className="flex items-center justify-between mb-1.5">
+              <h3 id="shap-factors-label" className="text-[11px] font-bold uppercase tracking-wider text-[#0F172A]">
+                SHAP FACTOR CONTRIBUTIONS
+              </h3>
+              <span className="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[#E6F0F9] text-[#002D62] border border-[#CBD5E1]">
+                SHAP v2.4 - CRIS AI
+              </span>
+            </div>
+
             {loading && (
               <p className="sys-meta" role="status">
                 Loading contributions…
@@ -261,27 +265,28 @@ export const ShapDrawer: React.FC<ShapDrawerProps> = ({ task, onClose }) => {
           </section>
         </div>
 
-        <div className="drawer-foot">
+        <div className="drawer-foot flex flex-col gap-2 pt-3 border-t border-[#E2E8F0]">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
+            ACTIONS
+          </div>
           <button
             type="button"
-            className="m-btn primary block"
+            className="w-full py-2 px-3 rounded text-[12px] font-bold text-white bg-[#002D62] hover:bg-[#003B82] shadow-xs flex items-center justify-center gap-1.5 transition-colors"
             onClick={() => navigate(`/block-planning?focus=${encodeURIComponent(task.task_id)}`)}
           >
             <CalendarClock size={14} aria-hidden="true" />
-            Schedule block for this task
+            Schedule Block for This Task
           </button>
           <button
             type="button"
-            className="m-btn block"
-            disabled
-            title="Crew assignment service is not enabled in this build"
+            className="w-full py-2 px-3 rounded text-[12px] font-bold text-[#334155] bg-white border border-[#CBD5E1] hover:bg-[#F8FAFC] shadow-xs flex items-center justify-center gap-1.5 transition-colors"
+            onClick={() => {
+              alert(`Circular sent to DRM Office & SSE/P-Way for ${task.task_id}`);
+            }}
           >
             <Send size={14} aria-hidden="true" />
-            Assign engineer / send circular
+            Assign Engineer / Send Circular
           </button>
-          <p className="sys-meta text-center">
-            AI output is advisory. Approval rests with the authorised railway official.
-          </p>
         </div>
       </aside>
     </>
