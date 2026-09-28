@@ -161,89 +161,101 @@ export const GanttChart: React.FC<GanttChartProps> = ({
 
           {/* Corridor Rows */}
           <div>
-            {rows.map(([corridor, corridorBlocks], rowIdx) => (
-              <div
-                key={corridor}
-                className={cn(
-                  'flex border-b border-[#E8EFF8] transition-colors',
-                  rowIdx % 2 === 0 ? 'g-row-a' : 'bg-white'
-                )}
-              >
-                {/* Sticky Left Column: Corridor Name & Block Count */}
+            {rows.map(([corridor, corridorBlocks], rowIdx) => {
+              const firstBlock = corridorBlocks[0];
+              return (
                 <div
+                  key={corridor}
                   className={cn(
-                    'sticky left-0 z-10 w-[180px] shrink-0 px-3 py-2 border-r border-[#C8D4E6] flex flex-col justify-center',
-                    rowIdx % 2 === 0 ? 'g-row-id-a' : 'bg-white'
+                    'flex border-b border-[#E8EFF8] transition-colors',
+                    rowIdx % 2 === 0 ? 'g-row-a' : 'bg-white'
                   )}
                 >
-                  <div className="text-[11.5px] font-bold text-[#0D1A2D] leading-tight truncate" title={corridor}>
-                    {corridor}
+                  {/* Sticky Left Column: Corridor Name & Block Count matching Figma */}
+                  <div
+                    className={cn(
+                      'sticky left-0 z-10 w-[210px] shrink-0 px-3.5 py-2 border-r border-[#C8D4E6] flex flex-col justify-center',
+                      rowIdx % 2 === 0 ? 'g-row-id-a' : 'bg-white'
+                    )}
+                  >
+                    <div className="text-[12px] font-bold text-[#002D62] leading-tight truncate" title={corridor}>
+                      {corridor}
+                    </div>
+                    <div className="text-[10px] text-[#546380] leading-tight mt-0.5 truncate">
+                      {firstBlock?.zone ? `${firstBlock.zone} ` : ''}{firstBlock?.fullName || ''}
+                    </div>
+                    <div className="text-[9.5px] text-[#8090A8] font-medium mt-0.5">
+                      {corridorBlocks.length} block{corridorBlocks.length === 1 ? '' : 's'} today
+                    </div>
                   </div>
-                  <div className="sys-meta text-[9.5px] text-[#546380] mt-0.5">
-                    {corridorBlocks.length} block{corridorBlocks.length === 1 ? '' : 's'} scheduled
+
+                  {/* 24-Hour Timeline Bar Canvas (Height 54px matching Figma) */}
+                  <div className="relative flex-1 h-[54px]">
+                    {/* Background hour grid lines */}
+                    {HOUR_TICKS.map((h) => (
+                      <span
+                        key={h}
+                        className="absolute top-0 bottom-0 border-l border-[#F0F4FA] pointer-events-none"
+                        style={{ left: `${(h / 24) * 100}%` }}
+                      />
+                    ))}
+
+                    {/* Red NOW vertical indicator line */}
+                    {nowHour !== undefined && nowHour >= 0 && nowHour <= 24 && (
+                      <span className="g-now" style={{ left: `${(nowHour / 24) * 100}%` }} />
+                    )}
+
+                    {/* Scheduled Block Elements */}
+                    {corridorBlocks.map((block) => {
+                      const left = Math.max(0, (block.startHour / 24) * 100);
+                      const width = Math.max(2.5, (Math.min(block.duration, 24 - block.startHour) / 24) * 100);
+                      const primaryDept = (block.dept || block.departments[0] || 'engineering').toLowerCase();
+                      const styleConfig = DEPT_STYLE[primaryDept] || DEPT_STYLE['p-way'];
+                      const isSelected = selectedBlock?.block_id === block.block_id;
+
+                      const bg = block.emergency
+                        ? 'linear-gradient(148deg, #dc2626 0%, #b91c1c 55%, #7f1d1d 100%)'
+                        : styleConfig.bg;
+
+                      return (
+                        <button
+                          type="button"
+                          key={block.block_id}
+                          className={cn(
+                            'g-block select-none text-[9.5px] rounded-[3px] shadow-sm flex flex-col justify-center text-left transition-all hover:brightness-110',
+                            block.emergency && 'is-emergency shadow-red-500/20',
+                            isSelected && 'ring-2 ring-white ring-offset-2 ring-offset-[#002D62] z-30'
+                          )}
+                          style={{
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            background: bg,
+                            border: `1px solid ${block.emergency ? '#ef4444' : styleConfig.border}`,
+                            boxShadow: isSelected
+                              ? '0 0 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.4)'
+                              : '0 1px 3px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2)',
+                          }}
+                          onClick={(e) => handleBlockClick(e, block)}
+                          onMouseEnter={(e) => handleMouseEnter(e, block)}
+                          onMouseLeave={handleMouseLeave}
+                          aria-label={`Block ${block.block_id} on ${block.corridor}, ${block.duration} hours`}
+                        >
+                          <div className="flex flex-col justify-center h-full px-2 py-0.5 leading-tight overflow-hidden">
+                            <div className="flex items-center gap-1 font-bold text-white text-[10.5px] truncate">
+                              {block.emergency && <span className="text-amber-300 font-bold shrink-0">⚠️</span>}
+                              <span className="truncate">{block.label || block.block_id}</span>
+                            </div>
+                            <div className="font-mono text-[9px] opacity-85 text-white/90 truncate mt-0.5">
+                              {block.block_id} · {formatTime(block.startHour)}–{formatTime(block.startHour + block.duration)}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-
-                {/* 24-Hour Timeline Bar Canvas */}
-                <div className="relative flex-1 h-[38px]">
-                  {/* Background hour grid lines */}
-                  {HOUR_TICKS.map((h) => (
-                    <span
-                      key={h}
-                      className="absolute top-0 bottom-0 border-l border-[#F0F4FA] pointer-events-none"
-                      style={{ left: `${(h / 24) * 100}%` }}
-                    />
-                  ))}
-
-                  {/* Red NOW vertical indicator line */}
-                  {nowHour !== undefined && nowHour >= 0 && nowHour <= 24 && (
-                    <span className="g-now" style={{ left: `${(nowHour / 24) * 100}%` }} />
-                  )}
-
-                  {/* Scheduled Block Elements */}
-                  {corridorBlocks.map((block) => {
-                    const left = Math.max(0, (block.startHour / 24) * 100);
-                    const width = Math.max(1.2, (Math.min(block.duration, 24 - block.startHour) / 24) * 100);
-                    const primaryDept = (block.dept || block.departments[0] || 'engineering').toLowerCase();
-                    const styleConfig = DEPT_STYLE[primaryDept] || DEPT_STYLE['p-way'];
-                    const isSelected = selectedBlock?.block_id === block.block_id;
-
-                    const bg = block.emergency
-                      ? 'linear-gradient(148deg, #dc2626 0%, #b91c1c 55%, #7f1d1d 100%)'
-                      : styleConfig.bg;
-
-                    return (
-                      <button
-                        type="button"
-                        key={block.block_id}
-                        className={cn(
-                          'g-block select-none text-[9.5px]',
-                          block.emergency && 'is-emergency',
-                          isSelected && 'ring-2 ring-white ring-offset-1 ring-offset-[#002D62] z-20'
-                        )}
-                        style={{
-                          left: `${left}%`,
-                          width: `${width}%`,
-                          background: bg,
-                          border: `1px solid ${block.emergency ? '#f87171' : styleConfig.border}`,
-                          boxShadow: isSelected
-                            ? '0 0 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.4)'
-                            : 'inset 0 1px 0 rgba(255,255,255,0.18)',
-                        }}
-                        onClick={(e) => handleBlockClick(e, block)}
-                        onMouseEnter={(e) => handleMouseEnter(e, block)}
-                        onMouseLeave={handleMouseLeave}
-                        aria-label={`Block ${block.block_id} on ${block.corridor}, ${block.duration} hours`}
-                      >
-                        <span className="truncate px-1 font-mono font-bold tracking-tight">
-                          {block.duration >= 1.2 ? block.block_id : '•'}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
