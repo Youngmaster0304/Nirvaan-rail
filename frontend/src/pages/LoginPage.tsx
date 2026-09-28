@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { apiErrorMessage, getApiBaseUrl, setApiBaseUrl } from '../services/api';
-import { Server, Check, ShieldCheck, Train, UserCheck, KeyRound, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
+import { GovtHeader } from '../components/GovtHeader';
+import { GovtFooter } from '../components/GovtFooter';
+import { Server, Check, ShieldCheck, UserCheck, KeyRound, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
 
 const ROLES = [
   { id: 'Chief Controller', label: 'Chief Controller (CPTM)', empId: 'EMP-NR-001', zone: 'NCR' },
@@ -83,98 +85,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#020B18] text-white flex flex-col justify-between selection:bg-[#F9931E]/30 selection:text-white">
-      {/* Ambient Lighting & Glow Orbs */}
-      <div className="absolute top-[-15%] left-[-10%] w-[650px] h-[650px] rounded-full bg-gradient-to-br from-[#003B82]/35 to-[#001838]/0 blur-[130px] pointer-events-none" />
-      <div className="absolute top-[25%] right-[-15%] w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-[#F9931E]/20 to-[#CC6A00]/0 blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[25%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#138808]/20 to-[#0A5E1C]/0 blur-[140px] pointer-events-none" />
+    <div className="min-h-screen bg-canvas flex flex-col justify-between selection:bg-[#002D62] selection:text-white">
+      {/* Official Government of India Header */}
+      <GovtHeader />
 
-      {/* Subtle Railway Grid Texture Overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.035]"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #FFF 1px, transparent 0)`,
-          backgroundSize: '36px 36px',
-        }}
-      />
+      {/* Main Container with Soft Government Depth */}
+      <main className="flex-1 flex flex-col items-center justify-center py-8 px-4 relative">
+        {/* Soft Ambient Depth behind the Card */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#002D62]/[0.04] blur-[100px] pointer-events-none" />
 
-      {/* Top Bar Branding */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/[0.08] backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg shadow-black/40">
-            <Train className="w-5 h-5 text-amber-400" />
-          </div>
-          <div>
-            <div className="text-[13px] font-black tracking-wider uppercase text-white/90 font-mono flex items-center gap-1.5">
-              <span>A-ABPS</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">
-                v2.1
-              </span>
-            </div>
-            <div className="text-[10.5px] text-white/50 tracking-wide font-sans">
-              Indian Railways AI Automatic Block Planning System
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] text-white/70">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>CRIS Engine Online</span>
-          </div>
-          {isAuthenticated && (
-            <Link
-              to="/"
-              className="px-3 py-1 rounded-full bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 text-xs font-semibold text-white transition-all flex items-center gap-1.5"
-            >
-              <span>Console Active</span>
-              <ArrowRight size={12} />
-            </Link>
-          )}
-        </div>
-      </header>
-
-      {/* Main Glassmorphism Card */}
-      <main className="relative z-10 w-full max-w-[520px] mx-auto px-4 py-4 my-auto">
-        <div
-          className="relative rounded-2xl overflow-hidden backdrop-blur-2xl bg-white/[0.08] border border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all"
-        >
-          {/* Tricolor Edge Glow */}
-          <div
-            className="h-1.5 w-full bg-gradient-to-r from-[#FF9933] via-white to-[#138808]"
-            style={{ boxShadow: '0 0 16px rgba(255, 153, 51, 0.4)' }}
-          />
+        {/* Frosted Glassmorphism Government Card */}
+        <div className="w-full max-w-[500px] bg-white/95 backdrop-blur-md rounded-card border border-[#C8D4E6] shadow-gov-lg overflow-hidden relative z-10">
+          {/* Official Indian Railways Tricolor Line */}
+          <div className="tricolor-line" role="presentation" />
 
           <div className="p-6 sm:p-8">
-            {/* Header / National Emblem */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-b from-white/15 to-white/5 border border-white/25 shadow-inner mb-3">
-                <ShieldCheck className="w-6 h-6 text-amber-400" />
+            {/* Header & Emblem */}
+            <div className="text-center mb-5">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-chip bg-[#002D62]/[0.06] border border-[#002D62]/15 text-[#002D62] mb-2.5 shadow-2xs">
+                <ShieldCheck size={26} />
               </div>
-              <h1 className="text-[20px] font-black tracking-tight text-white leading-tight font-sans">
+              <h1 className="text-[20px] font-bold text-[#002D62] leading-tight font-sans">
                 भारतीय रेल | INDIAN RAILWAYS
               </h1>
-              <p className="text-[12px] text-white/65 mt-0.5 font-medium">
-                Centre for Railway Information Systems (CRIS)
+              <p className="text-[12.5px] text-ink-muted mt-0.5 font-medium">
+                Ministry of Railways, Government of India
               </p>
-              <p className="text-[10.5px] font-mono text-amber-400/90 tracking-wide mt-1">
-                SECURE DISPATCHER &amp; CONTROLLER CONSOLE
+              <p className="text-[11.5px] text-[#002D62] font-semibold mt-1">
+                AI Block Planning System | एआई स्वचालित ब्लॉक योजना प्रणाली
               </p>
+              <div className="w-20 h-px official-rule mx-auto mt-3" aria-hidden="true" />
             </div>
 
-            {/* Authenticated Warning / Quick Access */}
+            {/* If Already Logged In */}
             {isAuthenticated && user && (
-              <div className="mb-5 p-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 backdrop-blur-md flex items-center justify-between text-xs">
+              <div className="mb-4 p-3 rounded-chip bg-[#E5F4EA] border border-[#8DD4A0] flex items-center justify-between text-[11.5px]">
                 <div className="flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <UserCheck className="w-4 h-4 text-[#138808] shrink-0" />
                   <div>
-                    <div className="font-bold text-emerald-200">Active Session: {user.name}</div>
-                    <div className="text-[10px] text-emerald-300/70">{user.role} · {user.zone}</div>
+                    <div className="font-bold text-[#0A6B21]">Active Session: {user.name}</div>
+                    <div className="text-[10px] text-[#546380]">{user.role} · {user.zone}</div>
                   </div>
                 </div>
                 <Link
                   to="/"
-                  className="px-3 py-1 rounded bg-emerald-500 hover:bg-emerald-400 text-[#020B18] font-bold text-xs shadow-sm transition-colors flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-chip bg-[#138808] hover:bg-[#0F6F06] text-white font-bold text-[11px] shadow-xs transition-colors flex items-center gap-1"
                 >
                   <span>Dashboard</span>
                   <ArrowRight size={11} />
@@ -182,10 +137,10 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Role Switcher Pills */}
-            <div className="mb-5">
-              <label className="text-[11px] font-semibold text-white/70 block mb-2 uppercase tracking-wider">
-                Select Console Persona / भूमिका चयन
+            {/* Role Persona Pills (Matching Website's Filter Pills) */}
+            <div className="mb-4">
+              <label className="section-label block mb-1.5">
+                Select Persona / भूमिका चयन
               </label>
               <div className="grid grid-cols-2 gap-1.5">
                 {ROLES.map((r) => {
@@ -195,14 +150,16 @@ export default function LoginPage() {
                       key={r.id}
                       type="button"
                       onClick={() => handleRoleSelect(r)}
-                      className={`px-2.5 py-2 rounded-lg text-left text-[11px] font-medium transition-all border ${
+                      className={`px-2.5 py-2 rounded-chip text-left text-[11px] transition-all border ${
                         isActive
-                          ? 'bg-white/20 text-white border-amber-400/80 shadow-[0_0_12px_rgba(249,147,30,0.25)]'
-                          : 'bg-white/[0.04] text-white/70 border-white/10 hover:bg-white/[0.09] hover:text-white'
+                          ? 'bg-[#002D62] text-white border-[#002D62] shadow-xs font-bold'
+                          : 'bg-[#F8FAFD] text-[#334155] border-[#CBD5E1] hover:bg-[#EEF3FA] font-medium'
                       }`}
                     >
-                      <div className="font-bold truncate text-[11px]">{r.label}</div>
-                      <div className="text-[9.5px] text-white/45 font-mono">{r.empId} · {r.zone}</div>
+                      <div className="truncate">{r.label}</div>
+                      <div className={`text-[9.5px] font-mono mt-0.5 ${isActive ? 'text-white/70' : 'text-[#8090A8]'}`}>
+                        {r.empId} · {r.zone}
+                      </div>
                     </button>
                   );
                 })}
@@ -212,62 +169,59 @@ export default function LoginPage() {
             {error && (
               <div
                 role="alert"
-                className="mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/40 text-red-200 text-xs flex items-center gap-2 backdrop-blur-md"
+                className="mb-4 p-2.5 bg-danger-surface text-status-rejected border border-danger-line rounded-chip text-[11.5px] flex items-center gap-2"
               >
-                <AlertTriangle size={14} className="shrink-0 text-red-400" />
+                <AlertTriangle size={14} className="shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Login Form */}
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3.5 text-left">
               <div>
-                <label htmlFor="empId" className="block text-[11px] font-semibold text-white/80 mb-1">
+                <label htmlFor="empId" className="m-field-label">
                   Employee ID / कर्मचारी आईडी
                 </label>
-                <div className="relative">
-                  <input
-                    id="empId"
-                    type="text"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.06] border border-white/15 text-white placeholder-white/30 text-xs font-mono focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all backdrop-blur-sm"
-                    placeholder="EMP-NR-001"
-                    value={empId}
-                    onChange={(e) => setEmpId(e.target.value)}
-                    required
-                    autoComplete="username"
-                  />
-                  <span className="absolute right-3 top-3 text-[10px] text-white/40 font-mono">ID</span>
-                </div>
+                <input
+                  id="empId"
+                  type="text"
+                  className="m-field mono"
+                  placeholder="e.g. EMP-NR-001"
+                  value={empId}
+                  onChange={(e) => setEmpId(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-[11px] font-semibold text-white/80 mb-1">
+                <label htmlFor="password" className="m-field-label">
                   Security Password / पासवर्ड
                 </label>
                 <div className="relative">
                   <input
                     id="password"
                     type="password"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.06] border border-white/15 text-white placeholder-white/30 text-xs font-mono focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all backdrop-blur-sm"
+                    className="m-field mono"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="current-password"
                   />
-                  <KeyRound size={13} className="absolute right-3 top-3 text-white/40" />
+                  <KeyRound size={13} className="absolute right-2.5 top-3 text-[#8090A8]" />
                 </div>
               </div>
 
               {/* Captcha */}
-              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-white/[0.04] border border-white/10">
+              <div className="p-2.5 rounded-chip bg-[#F8FAFD] border border-[#CBD5E1] flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11.5px] font-medium text-white/80">
-                    Verify: <span className="font-mono font-bold text-amber-300">{captchaSum.a} + {captchaSum.b}</span> =
+                  <span className="text-[11.5px] font-medium text-ink">
+                    Verify: <span className="font-mono font-bold text-[#002D62]">{captchaSum.a} + {captchaSum.b}</span> =
                   </span>
                   <button
                     type="button"
                     onClick={regenerateCaptcha}
-                    className="text-white/40 hover:text-white transition-colors"
+                    className="text-[#8090A8] hover:text-[#002D62] transition-colors p-0.5"
                     title="Refresh Captcha"
                   >
                     <RefreshCw size={11} />
@@ -276,7 +230,7 @@ export default function LoginPage() {
                 <input
                   id="captcha"
                   type="text"
-                  className="w-20 px-2 py-1 rounded bg-white/[0.08] border border-white/20 text-white text-center font-mono text-xs focus:outline-none focus:border-amber-400"
+                  className="m-field mono w-18 py-1 text-center font-bold"
                   value={captcha}
                   onChange={(e) => setCaptcha(e.target.value)}
                   placeholder="?"
@@ -289,7 +243,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-2.5 px-4 rounded-lg bg-gradient-to-r from-[#004492] to-[#002D62] hover:from-[#0055B3] hover:to-[#003B82] text-white font-bold text-xs tracking-wide shadow-lg shadow-black/40 border border-white/20 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="m-btn primary w-full py-2.5 text-[12px] font-bold shadow-xs flex items-center justify-center gap-2"
               >
                 {busy ? (
                   <>
@@ -304,28 +258,28 @@ export default function LoginPage() {
                 )}
               </button>
 
-              {/* Instant One-Click Demo Access */}
+              {/* One-Click Instant Demo Access */}
               <button
                 type="button"
                 onClick={handleInstantDemo}
                 disabled={busy}
-                className="w-full py-2.5 px-4 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border border-emerald-500/30 font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full py-2 px-3 rounded-chip border border-[#138808] text-[#0A6B21] bg-[#138808]/[0.06] hover:bg-[#138808] hover:text-white font-bold text-[11.5px] flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
               >
-                <span>⚡ Instant Demo Access / पूर्वावलोकन (One-Click)</span>
+                <span>⚡ Instant Demo Access / पूर्वावलोकन मोड (Preloaded Session)</span>
               </button>
             </form>
 
             {/* Server Settings Accordion */}
-            <div className="mt-5 pt-4 border-t border-white/10 flex flex-col gap-2">
-              <div className="flex items-center justify-between text-[11px] text-white/50">
+            <div className="mt-4 pt-3 border-t border-[#DCE5F0] flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11px] text-[#546380]">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="font-mono text-[10px]">Render API: Connected</span>
+                  <span className="w-2 h-2 rounded-full bg-[#138808]" />
+                  <span className="font-mono text-[10px] text-ink">Render API: Connected</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowConfig((v) => !v)}
-                  className="text-amber-400 hover:underline flex items-center gap-1 font-medium"
+                  className="text-[#002D62] hover:underline flex items-center gap-1 font-semibold text-[11px]"
                 >
                   <Server size={11} />
                   <span>{showConfig ? 'Hide Settings' : 'Configure Server'}</span>
@@ -333,15 +287,15 @@ export default function LoginPage() {
               </div>
 
               {showConfig && (
-                <div className="mt-2 p-3 rounded-lg bg-white/[0.05] border border-white/15 text-[11px] space-y-2">
-                  <label htmlFor="api-url" className="text-white/80 font-medium block">
+                <div className="mt-2 p-2.5 rounded-chip bg-[#F8FAFD] border border-[#CBD5E1] text-[11px] space-y-2">
+                  <label htmlFor="api-url" className="text-slate-700 font-semibold block text-[11px]">
                     Backend API Origin URL:
                   </label>
                   <div className="flex gap-2">
                     <input
                       id="api-url"
                       type="text"
-                      className="flex-1 px-2.5 py-1 rounded bg-black/40 border border-white/20 text-white font-mono text-[10.5px]"
+                      className="m-field flex-1 font-mono text-[11px] py-1"
                       value={apiUrl}
                       onChange={(e) => setApiUrl(e.target.value)}
                       placeholder="https://nirvaan-f4oi.onrender.com"
@@ -353,12 +307,12 @@ export default function LoginPage() {
                         setSavedUrlNotice(true);
                         setTimeout(() => setSavedUrlNotice(false), 2500);
                       }}
-                      className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-[10.5px] transition-colors shrink-0"
+                      className="m-btn primary py-1 px-3 text-[11px] shrink-0"
                     >
                       {savedUrlNotice ? <Check size={12} /> : 'Save'}
                     </button>
                   </div>
-                  <p className="text-[9.5px] text-white/40">
+                  <p className="text-[10px] text-[#8090A8]">
                     Live backend: <code>https://nirvaan-f4oi.onrender.com</code> or local <code>http://127.0.0.1:8000</code>
                   </p>
                 </div>
@@ -366,26 +320,17 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Statutory Footer notice */}
-          <div className="bg-red-950/40 border-t border-red-500/20 px-4 py-2 text-center text-[10px] text-red-300/80 font-mono">
-            RESTRICTED SYSTEM · UNAUTHORIZED ACCESS PROHIBITED UNDER IT ACT 2000 §66
+          {/* Statutory Red Warning Notice */}
+          <div className="border-t-2 border-rail-red bg-danger-surface p-2.5 text-[10.5px] font-bold text-status-rejected text-center leading-snug">
+            WARNING: This is a Government of India computer system. Unauthorized access is punishable
+            under IT Act 2000, Section 66.
           </div>
         </div>
       </main>
 
-      {/* Page Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-4 py-4 text-center text-xs text-white/40">
-        <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 mb-1 font-medium">
-          <span>Ministry of Railways</span>
-          <span>·</span>
-          <span>Centre for Railway Information Systems (CRIS)</span>
-          <span>·</span>
-          <span>Government of India</span>
-        </div>
-        <p className="text-[10px] font-mono text-white/30">
-          A-ABPS v2.1 (Automatic Asset &amp; Block Planning System) · Protected by G&amp;SR Rules 2026
-        </p>
-      </footer>
+      {/* Official Government Footer */}
+      <GovtFooter />
     </div>
   );
 }
+
