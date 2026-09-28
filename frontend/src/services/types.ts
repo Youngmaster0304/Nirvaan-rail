@@ -140,16 +140,17 @@ export type MonthlyPlanResponse = WeeklyPlanResponse;
 
 export interface Recommendation {
   id: string;
-  kind: 'MERGE' | 'DEFER' | 'ALERT' | 'OPT';
+  kind: 'MERGE' | 'DEFER' | 'ALERT' | 'OPT' | 'OPTIMIZE' | 'SCHEDULE';
   title: string;
   detail: string;
   status: string;
   ref: string;
   savings_label: string;
-  savings_hours: number;
+  savings_hours?: number;
   issued_at: string;
   actionable: boolean;
   source: string;
+  impact?: string;
 }
 
 export interface RecommendationListResponse {

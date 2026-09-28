@@ -11,6 +11,8 @@ interface KPICardProps {
   unit?: string;
   trend?: 'up' | 'down' | 'stable';
   trendValue?: string;
+  sub?: string;
+  color?: string;
   icon?: React.ReactNode;
   /** Optional sparkline series — only rendered when real trend data exists. */
   spark?: number[];
@@ -31,6 +33,8 @@ export const KPICard: React.FC<KPICardProps> = ({
   unit,
   trend,
   trendValue,
+  sub,
+  color,
   icon,
   spark,
   source,
@@ -93,6 +97,10 @@ export const KPICard: React.FC<KPICardProps> = ({
             {trend === 'down' && <ArrowDown size={11} aria-hidden="true" />}
             {trend === 'stable' && <Minus size={11} aria-hidden="true" />}
             {trendValue}
+          </span>
+        ) : sub ? (
+          <span className="mono text-[10px] font-medium text-slate-500 truncate" style={color ? { color } : undefined}>
+            {sub}
           </span>
         ) : (
           <span />

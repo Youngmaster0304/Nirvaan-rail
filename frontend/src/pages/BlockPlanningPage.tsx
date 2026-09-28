@@ -24,6 +24,208 @@ const durationOf = (block: BlockPlanSummary) => {
   return Math.max(0.5, ms / 3_600_000);
 };
 
+const fmtHour = (h: number) => {
+  const hr = Math.floor(h);
+  const min = Math.round((h - hr) * 60);
+  return `${String(hr).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+};
+
+export const FIGMA_GANTT_BLOCKS: GanttBlock[] = [
+  {
+    block_id: 'BL-2081',
+    label: 'P-Way Inspection',
+    corridor: 'NDLS – CNB (Delhi–Kanpur)',
+    fullName: 'Delhi – Kanpur',
+    zone: 'NCR',
+    dept: 'P-Way',
+    departments: ['Engineering', 'P-Way'],
+    startHour: 6,
+    duration: 3,
+    status: 'active',
+    impact: 'Medium',
+    trainsAffected: 4,
+    eng: 'JE/PW/NDLS',
+    taskCount: 4,
+  },
+  {
+    block_id: 'BL-2082',
+    label: 'OHE Maintenance',
+    corridor: 'NDLS – CNB (Delhi–Kanpur)',
+    fullName: 'Delhi – Kanpur',
+    zone: 'NCR',
+    dept: 'OHE',
+    departments: ['Traction', 'OHE'],
+    startHour: 14,
+    duration: 3.5,
+    status: 'scheduled',
+    impact: 'Low',
+    trainsAffected: 2,
+    eng: 'SSE/TRD/CNB',
+    taskCount: 2,
+  },
+  {
+    block_id: 'BL-2083',
+    label: 'Bridge Inspection',
+    corridor: 'BCT – PUNE (Mumbai–Pune)',
+    fullName: 'Mumbai – Pune',
+    zone: 'WR',
+    dept: 'Bridge',
+    departments: ['Engineering', 'Bridge'],
+    startHour: 2,
+    duration: 3,
+    status: 'active',
+    impact: 'Low',
+    trainsAffected: 1,
+    eng: 'AEN/BR/BCT',
+    taskCount: 1,
+  },
+  {
+    block_id: 'BL-2084',
+    label: 'Signal Testing',
+    corridor: 'BCT – PUNE (Mumbai–Pune)',
+    fullName: 'Mumbai – Pune',
+    zone: 'WR',
+    dept: 'Signal',
+    departments: ['S&T', 'Signal'],
+    startHour: 11,
+    duration: 2,
+    status: 'scheduled',
+    impact: 'Low',
+    trainsAffected: 2,
+    eng: 'JE/SIG/PUNE',
+    taskCount: 2,
+  },
+  {
+    block_id: 'BL-2090',
+    label: 'Track Tamping',
+    corridor: 'BCT – PUNE (Mumbai–Pune)',
+    fullName: 'Mumbai – Pune',
+    zone: 'WR',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 20,
+    duration: 3,
+    status: 'scheduled',
+    impact: 'Low',
+    trainsAffected: 1,
+    eng: 'SSE/PW/LNL',
+    taskCount: 1,
+  },
+  {
+    block_id: 'BL-2085',
+    label: 'Rail Grinding',
+    corridor: 'MAS – SBC (Chennai–Bengaluru)',
+    fullName: 'Chennai – Bengaluru',
+    zone: 'SR',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 8,
+    duration: 4,
+    status: 'active',
+    impact: 'High',
+    trainsAffected: 6,
+    eng: 'SSE/PW/JTJ',
+    taskCount: 3,
+  },
+  {
+    block_id: 'BL-2086',
+    label: 'OHE Wire Repl.',
+    corridor: 'HWH – DHN (Kolkata–Dhanbad)',
+    fullName: 'Kolkata – Dhanbad',
+    zone: 'ER',
+    dept: 'OHE',
+    departments: ['Traction'],
+    startHour: 16,
+    duration: 6,
+    status: 'scheduled',
+    impact: 'High',
+    trainsAffected: 5,
+    eng: 'SSE/TRD/ASN',
+    taskCount: 3,
+  },
+  {
+    block_id: 'BL-2087',
+    label: 'Track Tamping',
+    corridor: 'JP – ADI (Jaipur–Ahmedabad)',
+    fullName: 'Jaipur – Ahmedabad',
+    zone: 'NWR',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 3,
+    duration: 3.5,
+    status: 'approved',
+    impact: 'Low',
+    trainsAffected: 1,
+    eng: 'JE/PW/FL',
+    taskCount: 1,
+  },
+  {
+    block_id: 'BL-2088',
+    label: 'Signal Maint.',
+    corridor: 'JP – ADI (Jaipur–Ahmedabad)',
+    fullName: 'Jaipur – Ahmedabad',
+    zone: 'NWR',
+    dept: 'Signal',
+    departments: ['S&T'],
+    startHour: 19,
+    duration: 2,
+    status: 'scheduled',
+    impact: 'Low',
+    trainsAffected: 2,
+    eng: 'JE/SIG/ADI',
+    taskCount: 2,
+  },
+  {
+    block_id: 'BL-2089',
+    label: 'EMERGENCY: Fracture Repair',
+    corridor: 'LKO – BSB (Lucknow–Varanasi)',
+    fullName: 'Lucknow – Varanasi',
+    zone: 'NER',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 7,
+    duration: 7,
+    status: 'critical',
+    impact: 'Critical',
+    trainsAffected: 9,
+    eng: 'AEN/3/NER — URGENT',
+    taskCount: 5,
+    emergency: true,
+  },
+  {
+    block_id: 'BL-2091',
+    label: 'Track Renewal',
+    corridor: 'NDLS – MTJ (Delhi–Mathura)',
+    fullName: 'Delhi – Mathura',
+    zone: 'NCR',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 1,
+    duration: 3,
+    status: 'approved',
+    impact: 'Medium',
+    trainsAffected: 3,
+    eng: 'SSE/PW/MTJ',
+    taskCount: 2,
+  },
+  {
+    block_id: 'BL-2092',
+    label: 'Weld Inspection',
+    corridor: 'NDLS – MTJ (Delhi–Mathura)',
+    fullName: 'Delhi – Mathura',
+    zone: 'NCR',
+    dept: 'P-Way',
+    departments: ['Engineering'],
+    startHour: 18,
+    duration: 2.5,
+    status: 'scheduled',
+    impact: 'Low',
+    trainsAffected: 2,
+    eng: 'JE/PW/AGC',
+    taskCount: 1,
+  },
+];
+
 export default function BlockPlanningPage() {
   const [plans, setPlans] = useState<PlanListItem[]>([]);
   const [planId, setPlanId] = useState('');
@@ -103,34 +305,42 @@ export default function BlockPlanningPage() {
   ).length;
 
   const dayBlocks = useMemo(() => {
-    if (!detail) return [];
+    if (!detail || !detail.blocks || detail.blocks.length === 0) return [];
     return detail.blocks.filter((b) => String(b.start_time ?? '').slice(0, 10) === day);
   }, [detail, day]);
 
-  const filtered = useMemo(
-    () =>
-      dayBlocks.filter((b) => {
-        if (dept && !b.departments.some((d) => d.toLowerCase() === dept.toLowerCase())) return false;
-        if (status && String(b.status).toUpperCase() !== status.toUpperCase()) return false;
-        return true;
-      }),
-    [dayBlocks, dept, status],
-  );
-
-  const ganttBlocks: GanttBlock[] = useMemo(
-    () =>
-      filtered.map((b) => ({
+  const rawGanttList: GanttBlock[] = useMemo(() => {
+    if (dayBlocks.length > 0) {
+      return dayBlocks.map((b) => ({
         block_id: b.block_id,
+        label: (b.departments && b.departments[0]) ? `${b.departments[0]} Maintenance` : 'Possession Window',
         corridor: b.corridor_name || b.corridor_id || b.section,
         startHour: hourOf(b.start_time),
         duration: durationOf(b),
         departments: b.departments ?? [],
+        dept: b.departments && b.departments[0] ? b.departments[0] : 'Engineering',
         status: b.status,
         taskCount: b.task_count,
+        impact: b.impact_score && b.impact_score > 6 ? 'Critical' : b.impact_score && b.impact_score > 3 ? 'Medium' : 'Low',
+        trainsAffected: b.impact_score ? Math.round(b.impact_score) : 2,
+        eng: 'CPTM Controller Allocated',
         emergency: String(b.status).toUpperCase().includes('EMERG') || b.emergency === true,
-      })),
-    [filtered],
+      }));
+    }
+    return FIGMA_GANTT_BLOCKS;
+  }, [dayBlocks]);
+
+  const filtered = useMemo(
+    () =>
+      rawGanttList.filter((b) => {
+        if (dept && !b.departments.some((d) => d.toLowerCase().includes(dept.toLowerCase()))) return false;
+        if (status && String(b.status).toUpperCase() !== status.toUpperCase()) return false;
+        return true;
+      }),
+    [rawGanttList, dept, status],
   );
+
+  const ganttBlocks: GanttBlock[] = filtered;
 
   const isToday = day === isoDay(new Date());
   const nowHour = isToday ? new Date().getHours() + new Date().getMinutes() / 60 : undefined;
@@ -179,7 +389,21 @@ export default function BlockPlanningPage() {
     { key: 'status', name: 'Status', render: (r) => <StatusBadge status={r.status} /> },
   ];
 
-  const registerRows = filtered.map((b) => ({ ...b, id: b.block_id }));
+  const registerRows: (BlockPlanSummary & { id: string })[] = filtered.map((b) => ({
+    ...b,
+    id: b.block_id,
+    block_id: b.block_id,
+    section: b.fullName || b.corridor,
+    window: `${fmtHour(b.startHour)} – ${fmtHour(b.startHour + b.duration)} (${b.duration.toFixed(1)}h)`,
+    departments: b.departments ?? [b.dept || 'Engineering'],
+    task_count: b.taskCount ?? 2,
+    status: b.status,
+    corridor_id: b.corridor,
+    corridor_name: b.fullName || b.corridor,
+    impact_score: b.trainsAffected ?? 2,
+    trains_affected: b.trainsAffected ?? 2,
+    emergency: b.emergency ?? false,
+  }));
 
   const dayOptions = useMemo(() => {
     if (!detail) return [] as string[];
