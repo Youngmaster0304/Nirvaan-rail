@@ -1,5 +1,7 @@
 # SIH26027 Frontend — AI Block Planning Portal
 
+Official Indian Railways / CRIS-compliant Web Portal for Problem Statement **SIH26027: AI-Powered Automatic Block Planning System**.
+
 ## Quick Start
 ```bash
 cd frontend
@@ -8,36 +10,55 @@ npm run dev
 # Opens at http://localhost:5173
 ```
 
-## Design Philosophy
-Styled as an official Indian Railways administrative portal. The UI borrows layout structures similar to NTES and CRIS applications for high user familiarity. The focus is on providing a dense, information-rich view for planners, without unnecessary aesthetic bloat.
+## Design Philosophy & Compliance
+Styled strictly in accordance with **GIGW 3.0 (Guidelines for Indian Government Websites)** and official Indian Railways / CRIS design standards:
+- **Palette**: Official Railway Navy (`#002D62`), Crisp Slate Canvas (`#DDE4EF`), Saffron (`#FF9933`), and India Green (`#138808`).
+- **Typography & Structure**: High-density operational data tables, monospace block codes, and official bilingual headers (English + Hindi).
+- **Accessibility**: High-contrast mode, text size increment/decrement controls, screen reader landmarks, and full keyboard navigation.
+- **Glassmorphism & Depth**: Frosted scrim backdrops (`backdrop-blur-md bg-[#001128]/45`) on all modal dialogs and slide-out explainability drawers.
 
-## Pages
-1. **Dashboard**: High-level metrics, active blocks, and alerts.
-2. **Task Inbox**: Filterable list of all maintenance tasks.
-3. **AI Prioritization**: View prioritized tasks with SHAP explanations.
-4. **Block Generation**: Multi-department optimization interface.
-5. **Corridor Map**: Network topology view using Leaflet.js.
-6. **Conflict Resolution**: Intervene in cross-department conflicts.
-7. **Audit Logs**: Track approvals, overrides, and system events.
-8. **Settings**: User preferences and AI threshold configs.
-9. **Reports**: Generate PDF exports of planned blocks.
-10. **Help & Guidelines**: Quick references for Railway Board rules.
-11. **Login**: Authenticated entry portal.
+---
 
-## Components
-- **TaskCard**: Summary view of a maintenance task.
-- **ShapBarChart**: Visual explanation of AI score using Recharts.
-- **TopologyGraph**: Node-edge view of the sections.
-- **BlockGantt**: Gantt chart for block schedules.
-- **StatWidget**: Number and trend indicator.
-- *...and 12 more generic UI components.*
+## Core Pages & Workbenches
+
+1. **Dashboard (`/`)**: High-level executive overview, 5 critical operational KPIs, active block counts, and departmental distribution.
+2. **Task Prioritization (`/tasks`)**: Paginated multi-department task inbox with LightGBM priority scores, policy overrides, and slide-out **SHAP Explainability Drawer**.
+3. **Block Planning (`/planning`)**: Multi-department optimization interface with AI Suggestion modal, interactive Gantt chart, and clickable task inspector popup.
+4. **Weekly Plan (`/weekly`)**: 7-day rolling maintenance block schedule with corridor filters and dispatch readiness checks.
+5. **Monthly Plan (`/monthly`)**: 30-day macro-planning horizon for major track renewals (TSR/CTR) and overhead equipment (OHE) maintenance.
+6. **Impact Simulation (`/simulation`)**: Counterfactual with-AI vs. without-AI comparison measuring punctuality impact and speed restriction savings.
+7. **Corridor Map (`/map`)**: GIS spatial network topology using Leaflet.js with interactive station markers and section health statuses.
+8. **Audit Trail (`/audit`)**: CAG-compliant immutable action log tracking controller approvals, manual overrides, and system-generated plans.
+9. **Reports (`/reports`)**: One-click PDF (`jsPDF`) and Excel (`xlsx`) report generator for official statutory railway filings.
+10. **Login Portal (`/login`)**: CRIS GIGW 3.0 login page with 4 official role personas (`Chief Controller`, `Section Engineer`, `Dispatcher`, `Safety Auditor`) and one-click instant demo access.
+11. **Statutory Pages**: Complete GIGW-required legal pages — Disclaimer (`/disclaimer`), Terms of Use (`/terms`), Privacy Policy (`/privacy`), RTI Act 2005 (`/rti`), Site Map (`/sitemap`), Help & Guidelines (`/help`), and Contact Directory (`/contact`).
+
+---
+
+## Key Components
+
+- **`<GovtHeader />`**: Ashoka Lion Capital emblem, Ministry of Railways / CRIS branding, live IST clock, and Tiranga accent stripe.
+- **`<GovtNavbar />`**: Unified portal navigation bar with top-level tabs, active route indicators, role badges, and English/Hindi language toggle.
+- **`<GovtFooter />`**: Official statutory links, copyright notice, and GIGW accessibility toolbar.
+- **`<ShapDrawer />` & `<SHAPExplanation />`**: Explainable AI drawer featuring clean waterfall charts and factor delta tables.
+- **`<BlockGantt />` & `<TaskModal />`**: Interactive visual timeline with clickable task inspector modal showing crew, equipment, and train impact.
+- **`<ChatDrawer />`**: Floating AI Railway Assistant grounded in live database queries and data.gov.in datasets.
+- **`<ApprovalModal />`**: Controller sign-off modal with frosted glass blur effect (`backdrop-blur-md`).
+
+---
 
 ## Tech Stack
-- **Framework**: React 18 + TypeScript (built with Vite)
-- **Styling**: TailwindCSS (custom government portal theme)
-- **Data Viz**: Recharts, Leaflet.js for maps
-- **State**: Zustand for local/global UI state, TanStack Query for server state
-- **I18n**: react-i18next supporting English and Hindi
+- **Framework**: React 18 + TypeScript (Vite 5)
+- **Styling**: TailwindCSS with official government color palette
+- **Data Visualization**: Recharts (waterfall & metrics), Leaflet.js (GIS corridor maps)
+- **State Management**: Zustand (client & session state), TanStack Query (server caching)
+- **Internationalization**: `react-i18next` (English & Hindi)
+- **Export Engines**: `jspdf`, `jspdf-autotable`, `xlsx`
 
-## Integration with Backend
-The frontend expects the backend to run on `localhost:8000`. API calls are managed via Axios, wrapped by TanStack Query for caching and re-fetching.
+---
+
+## Production Deployment (Vercel)
+Built automatically from the repository root via `vercel.json`:
+- **Build Command**: `npm --prefix frontend run build`
+- **Output Directory**: `frontend/dist`
+- **Backend API**: Connects to live Render backend (`https://nirvaan-f4oi.onrender.com`) via `VITE_API_URL`.

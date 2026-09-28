@@ -2,6 +2,10 @@
 # Smart India Hackathon 2026
 
 > **Problem Statement ID**: 26027 | **Organization**: Ministry of Railways | **Category**: Software
+>
+> 🌐 **Live Backend (Render)**: [https://nirvaan-f4oi.onrender.com](https://nirvaan-f4oi.onrender.com)  
+> 📑 **Interactive API Docs (Swagger)**: [https://nirvaan-f4oi.onrender.com/docs](https://nirvaan-f4oi.onrender.com/docs)  
+> 💻 **GitHub Repository**: [Youngmaster0304/sih26027-a-abps](https://github.com/Youngmaster0304/sih26027-a-abps)
 
 ## Problem Statement
 The Indian Railways executes massive track maintenance across Engineering (TMS), Signal & Telecom (SMMS), and Traction (TDMS) departments. Currently, maintenance planning is siloed, leading to redundant track closures, suboptimal block durations, and schedule conflicts. Problem statement SIH26027 requires an AI-driven system to harmonize tasks across departments and optimize block planning while retaining the Human-in-Command principle.
@@ -45,13 +49,15 @@ npm run dev
 # Opens at http://localhost:5173
 ```
 
-### Demo Login
-| Employee ID | Password | Role |
-|------------|----------|------|
-| EMP-NR-001 | demo123 | Dispatcher |
-| EMP-NR-002 | demo123 | Maintenance Officer |
-| EMP-WR-001 | demo123 | Supervisor |
-| EMP-HQ-001 | demo123 | Admin |
+### Demo Login Personas
+| Employee ID | Password | Role | Department / Zone |
+|---|---|---|---|
+| `EMP-NR-001` | `demo123` | Chief Controller (CPTM) | Operating / Northern Railway |
+| `EMP-NCR-204` | `demo123` | Section Engineer (SSE) | Engineering (P-Way) / NCR |
+| `EMP-WR-102` | `demo123` | Traffic Dispatcher | Operations / Western Railway |
+| `EMP-CRS-088` | `demo123` | Safety Auditor (CRS) | Safety / Railway Board |
+
+> 💡 **Quick Access**: The login page also features an **⚡ Instant Demo Access** button that preloads a verified session without requiring manual credentials.
 
 ## Architecture Diagram
 ```mermaid
@@ -112,20 +118,21 @@ graph TD
 | **Deployment** | Docker, docker-compose, nginx |
 
 ## Features
-- ✅ Unified task ingestion across 3 departments (500+ synthetic tasks)
-- ✅ Machine Learning prioritization using LightGBM
-- ✅ Explainable AI (SHAP) — dispatchers see WHY a task was prioritized
-- ✅ Transparent safety overrides (rail fracture = always top priority)
-- ✅ Cross-department block merging using OR-Tools CP-SAT
-- ✅ Corridor topology modeling with NetworkX
-- ✅ Weekly + Monthly plan generation
-- ✅ Impact simulation (with/without AI comparison)
-- ✅ Immutable audit trail for CAG compliance
-- ✅ Government portal UI (IRCTC/NTES/CRIS style)
-- ✅ Hindi + English bilingual support (GIGW 3.0 compliant)
-- ✅ Accessibility: font size, high contrast, screen reader, keyboard nav
-- ✅ PDF + Excel export for official reports
-- ✅ Interactive corridor map with Leaflet.js
+- ✅ **Unified Multi-Departmental Ingestion**: 500+ tasks normalized across TMS (Civil), SMMS (Signals), and TDMS (Traction)
+- ✅ **Machine Learning Prioritization**: LightGBM scoring engine trained on defect severity, line capacity, and overdue metrics
+- ✅ **Explainable AI (SHAP Waterfall)**: Interactive factor breakdown drawer explaining why tasks are prioritized with exact positive/negative contributions
+- ✅ **Policy Override Safety Layer**: Absolute safety rules (e.g. rail fractures, critical signal failures) bypass ML black-box scoring
+- ✅ **CP-SAT Optimization & Block Merging**: Google OR-Tools merges compatible cross-department tasks to minimize overall track closures
+- ✅ **Spatial Corridor Topology**: NetworkX corridor graph modeling tracks, sections, stations, and directional dependencies
+- ✅ **Figma-Aligned Block Planning**: Interactive Gantt timeline with clickable task inspector modal and live operational KPIs
+- ✅ **Multi-Time-Horizon Planning**: Dedicated Weekly (`/weekly`) and Monthly (`/monthly`) planning workbenches
+- ✅ **Counterfactual Impact Simulation**: Side-by-side with-AI vs. without-AI comparison (punctuality impact, speed restriction savings)
+- ✅ **AI Railway Assistant Chatbot**: Integrated conversational assistant grounded in live database queries, Railway Board rules, and data.gov.in datasets
+- ✅ **Official CRIS / Indian Railways GIGW 3.0 Theme**: Authentic government aesthetic (`#002D62`, `#DDE4EF`), Ashoka Chakra emblem, live IST clock
+- ✅ **Frosted Glassmorphism & Scrim Blur**: `backdrop-blur-md` background effects on all modal and drawer scrims
+- ✅ **CAG-Compliant Immutable Audit Trail**: Role-based action logging capturing user approvals, modifications, and system overrides
+- ✅ **Bilingual Support & Accessibility**: English + Hindi localization (`react-i18next`), high-contrast toggle, font size scalers
+- ✅ **Official Statutory Export**: One-click PDF and Excel `.xlsx` report generation for field engineers and controllers
 
 ## SIH26027 Pillars Addressed
 | Pillar | Implementation |
@@ -223,27 +230,28 @@ and explains any fallback in `note`.
 
 ## Deployment
 
-### Backend → Render
-1. Push this repo to GitHub (see below).
-2. Render → **New → Blueprint** → select the repo. `render.yaml` creates the service.
-3. After it is live, set `CORS_ORIGINS` in the Render environment to include your
-   Vercel URL, e.g. `http://localhost:3000,http://localhost:5173,https://<app>.vercel.app`.
-4. Health check: `https://<service>.onrender.com/api/health`
+### Backend → Render (Live)
+- **Live Service URL**: `https://nirvaan-f4oi.onrender.com`
+- **Health Check**: [https://nirvaan-f4oi.onrender.com/api/health](https://nirvaan-f4oi.onrender.com/api/health)
+- **Swagger Documentation**: [https://nirvaan-f4oi.onrender.com/docs](https://nirvaan-f4oi.onrender.com/docs)
 
-> SQLite on Render's free plan is ephemeral and resets on redeploy. Startup
-> re-seeds automatically (500 tasks, 4 demo users, corridors, KPIs) whenever the
-> tables are empty, so the app stays usable. Attach a disk or switch
-> `DATABASE_URL` to Postgres for durable data.
+**Deployment Steps**:
+1. Push this repository to GitHub (`main` branch).
+2. On Render: **New → Blueprint** → select `Youngmaster0304/sih26027-a-abps`. The `render.yaml` specification will auto-provision the FastAPI web service with Python 3.13.
+3. Configure `CORS_ORIGINS` in Render environment settings with your Vercel URL (e.g. `https://<app>.vercel.app,http://localhost:5173`).
+4. On startup, SQLite automatically seeds 500+ tasks across Civil, Electrical, and Signaling with pre-calculated LightGBM priority scores.
 
-### Frontend → Vercel
-1. Vercel → **Add New Project** → import the repo.
-2. Set **Root Directory** to `frontend` (Vercel auto-detects Vite; `frontend/vercel.json`
-   supplies the SPA rewrite and build settings).
-3. In **Project Settings → Environment Variables**, add:
-   - `VITE_API_URL` = your Render service URL, e.g. `https://a-abps-api.onrender.com`
-     (no trailing slash). Redeploy after setting it.
-4. Leave `VITE_API_URL` unset for local dev — Vite's proxy already forwards `/api`
-   to `http://localhost:8000`.
+### Frontend → Vercel (Monorepo Zero-Config)
+The repository includes a root `vercel.json` and `package-lock.json` configured for seamless monorepo deployment:
+- **Root Directory**: `.` (Repository root)
+- **Build Command**: `npm --prefix frontend run build`
+- **Install Command**: `npm --prefix frontend install`
+- **Output Directory**: `frontend/dist`
+- **SPA Rewrites**: Handled automatically by `vercel.json` routing all routes to `/index.html`.
+
+**Environment Variables on Vercel**:
+- Set `VITE_API_URL` = `https://nirvaan-f4oi.onrender.com` (no trailing slash).
+- (For local development, `VITE_API_URL` defaults to using the Vite proxy to `http://localhost:8000`).
 
 ### Environment
 Copy `.env.example` to `.env`. Every entry has a working default, so an empty
